@@ -1,0 +1,391 @@
+\documentclass[10pt, aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+
+% --- THEME SETTINGS ---
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{} % Hide navigation symbols
+
+% --- LOGO CONFIGURATION ---
+% Placeholder for the university logo on every slide (e.g., bottom right)
+\logo{\includegraphics[height=1cm]{graphics/hcmut.png}}
+
+\title[Bài toán Phân công cán bộ coi thi (IAP)]{Mô hình hóa Toán học (CO2011) \texorpdfstring{\\}{ } Bài toán Phân công cán bộ coi thi (IAP)}
+\author[Nhóm 8 Lớp L01]{
+  GVHD: Phạm An Vinh  \\ \vspace{0.1cm}
+  Thành viên nhóm:  \\
+  Phạm Nghĩa Trung - 2413713 \\
+  Phạm Minh Đức - 2414106 \\
+  Nguyễn Phúc Vĩnh - 2414001 \\
+  Đào Nhật Toàn - 2413523
+}
+\institute[HCMUT]{
+  Khoa Khoa học và Kỹ thuật Máy tính  \\
+  Trường Đại học Bách Khoa Thành phố Hồ Chí Minh 
+}
+\date{Tháng 5/2026}
+
+\begin{document}
+
+% --- SLIDE 1: TITLE ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- SLIDE 2: AGENDA ---
+\begin{frame}{Nội dung trình bày}
+    \tableofcontents
+\end{frame}
+
+% ==============================================================================
+% --- SECTION 1 ---
+% ==============================================================================
+\section{Giới thiệu bài toán và Nội dung thực hiện}
+
+% TRANSITION SLIDE 1
+\begin{frame}[plain]
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=12pt,center,shadow=true,rounded=true]{palette primary}
+        \usebeamerfont{title}\Huge \textbf{Phần 1: Giới thiệu bài toán và Nội dung thực hiện}
+    \end{beamercolorbox}
+    \vspace{0.5cm}
+    \large Bối cảnh thực tế, tính cấp thiết và quy trình giải quyết
+    \vfill
+\end{frame}
+
+% --- SLIDE 3 ---
+\begin{frame}{1.1 Giới thiệu bài toán (Problem Context)}
+    \begin{itemize}
+        \item Bài toán Phân công cán bộ coi thi (Invigilator Assignment Problem - IAP) là một trong những thách thức phức tạp và tốn kém nguồn lực nhất trong quản lý đào tạo đại học.
+        \item \textbf{Đặc điểm dữ liệu thực tế tại HCMUT:} Khối lượng dữ liệu khổng lồ với hàng ngàn ca thi kéo dài trong nhiều tuần, hàng trăm cán bộ có lịch trình chồng chéo và các quy định nghiêm ngặt.
+        \item \textbf{Bản chất bài toán:} Thuộc lớp bài toán thỏa mãn ràng buộc và có bản chất NP-Khó (NP-Hard).
+        \item \textbf{Hậu quả của việc xếp lịch thủ công:} Dễ dẫn đến sai sót, xung đột lịch trình, hoặc phân bổ khối lượng công việc không công bằng giữa các giảng viên.
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 4 ---
+\begin{frame}{1.2 Nội dung thực hiện chính}
+    \begin{enumerate}
+        \item \textbf{Tiền xử lý dữ liệu (Data Preprocessing):} Làm sạch dữ liệu, xây dựng tập cán bộ/ca thi, ma trận khả dụng, phát hiện ca trùng lặp/liên tiếp và xuất ra định dạng phù hợp cho solver.
+        \item \textbf{Mô hình Toán học (Mathematical Modeling):} Xây dựng mô hình Quy hoạch Tuyến tính Nguyên (Integer Linear Programming - ILP) bao gồm đầy đủ hệ thống ràng buộc cứng và mềm.
+        \item \textbf{Triển khai Bộ giải (Solver Implementation):} Tích hợp bộ giải tối ưu tìm phương án có chi phí phạt nhỏ nhất mà vẫn thỏa mãn 100\% các ràng buộc cứng.
+        \item \textbf{Đánh giá và Mở rộng (Evaluation \& Extension):} Đánh giá chi tiết kết quả phân chia khối lượng công việc so với lịch gốc và đề xuất các hướng mở rộng bằng thuật toán Heuristic.
+    \end{enumerate}
+\end{frame}
+
+% ==============================================================================
+% --- SECTION 2 ---
+% ==============================================================================
+\section{Mô hình Toán học (Mathematical Modeling)}
+
+% TRANSITION SLIDE 2
+\begin{frame}[plain]
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=12pt,center,shadow=true,rounded=true]{palette primary}
+        \usebeamerfont{title}\Huge \textbf{Phần 2: Mô hình Toán học (Mathematical Modeling)}
+    \end{beamercolorbox}
+    \vspace{0.5cm}
+    \large Định nghĩa Tập hợp, Tham số, Biến quyết định và Hệ thống Ràng buộc
+    \vfill
+\end{frame}
+
+% --- SLIDE 5 ---
+\begin{frame}{2.1 Phân tích Tập hợp (Sets Analysis) - Phần 1}
+    Để biểu diễn IAP dưới dạng ILP, hệ thống định nghĩa các tập hợp cơ sở sau:
+    \begin{itemize}
+        \item $I$: Tập hợp các cán bộ coi thi, đánh dấu bằng chỉ số $i \in I$. Thực tế có $|I| = 73$ cán bộ.
+        \item $J$: Tập hợp các ca thi, đánh dấu bằng chỉ số $j \in J$. Thực tế có $|J| = 65$ ca thi riêng biệt.
+        \item $D_k$: Tập hợp các ca thi diễn ra trong cùng một ngày $k$.
+        \item $O$: Tập hợp các cặp ca thi $(j_1, j_2)$ có thời gian diễn ra trùng lặp nhau (overlap).
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 6 ---
+\begin{frame}{2.1 Phân tích Tập hợp (Sets Analysis) - Phần 2}
+    Các tập hợp phục vụ cho ràng buộc liên tiếp và phần thưởng:
+    \begin{itemize}
+        \item $C$: Tập hợp các cặp ca thi $(j_1, j_2)$ diễn ra liên tiếp nhau mà khoảng thời gian nghỉ nhỏ hơn mức tối thiểu cho phép (1 slot).
+        \item $S$: Tập hợp các cặp ca thi $(j_1, j_2)$ diễn ra trong cùng một buổi, tại cùng một cơ sở, và không vi phạm trùng lịch hay thời gian nghỉ. 
+        \item \textbf{Điều kiện giao tập:} $S \cap (O \cup C) = \emptyset$ (Cặp ca thuộc nhóm thưởng thì không được trùng lặp với các vi phạm ràng buộc).
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 7 ---
+\begin{frame}{2.2 Phân tích Tham số (Parameters)}
+    Các tham số được rút trích từ quá trình tiền xử lý:
+    \begin{itemize}
+        \item $R_j$: Số lượng cán bộ coi thi tối thiểu cần thiết cho ca thi $j$. (Khoảng $1 \sim 35$ cán bộ/ca).
+        \item $A_{ij} \in \{0, 1\}$: Ma trận khả dụng. Nhận giá trị 1 nếu cán bộ $i$ có thể coi thi ca $j$, ngược lại bằng 0.
+        \item $C_{ij}$: Chi phí phạt tĩnh (static penalty) dựa trên nguyện vọng cơ sở làm việc. $C_{ij} > 0$ nếu vi phạm nguyện vọng.
+        \item $T$: Khối lượng công việc mục tiêu (Target workload) cho mỗi cán bộ: $T = \frac{\sum_{j \in J} R_j}{|I|}$. Trung bình là khoảng $10.53$ ca/cán bộ.
+        \item Các trọng số tối ưu: $W_{pref}$ (cơ sở), $W_{fair}$ (công bằng), và $W_{sess}$ (ghép ca thuận tiện).
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 8 ---
+\begin{frame}{2.3 Biến Quyết định (Decision Variables)}
+    Mô hình sử dụng các nhóm biến quyết định sau:
+    \begin{itemize}
+        \item \textbf{Biến phân công chính:} $x_{ij} \in \{0, 1\}$ với $\forall i \in I, j \in J$. Giá trị $1$ nếu cán bộ $i$ được phân vào ca $j$, ngược lại là $0$.
+        \item \textbf{Biến phụ trợ tuyến tính hóa:} $z_{i, j_1, j_2} \in \{0, 1\}$ với $\forall i \in I, (j_1, j_2) \in S$. Giá trị $1$ nếu cán bộ $i$ được phân vào cả hai ca $j_1$ và $j_2$ để nhận điểm thưởng ghép ca.
+        \item \textbf{Biến độ lệch (Goal Programming):} $d_i^+, d_i^- \geq 0$ đại diện cho phần khối lượng công việc vượt mức ($+$) hoặc dưới mức ($-$) so với mục tiêu chung $T$. Do $T$ không nguyên, các biến này là biến liên tục (continuous).
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 9 ---
+\begin{frame}{2.4 Hàm Mục tiêu (Objective Function)}
+    Hàm mục tiêu được thiết kế để cực tiểu hóa tổng điểm phạt và tối đa hóa lợi ích:
+    
+    $$\min Z = W_{pref}\sum_{i \in I}\sum_{j \in J}C_{ij}x_{ij} + W_{fair}\sum_{i \in I}(d_i^+ + d_i^-) - W_{sess}\sum_{i \in I}\sum_{(j_1, j_2) \in S}z_{i, j_1, j_2}$$ 
+    
+    \textbf{Giải nghĩa 3 cụm chính:}
+    \begin{enumerate}
+        \item \textbf{Cụm 1 (Campus Preference):} Phạt các quyết định phân công sai cơ sở nguyện vọng, giảm thiểu di chuyển.
+        \item \textbf{Cụm 2 (Fairness):} Cân bằng khối lượng công việc giữa các cán bộ, hạn chế quá tải hoặc thiếu tải (Mô hình Goal Programming).
+        \item \textbf{Cụm 3 (Same-session Reward):} Điểm thưởng khuyến khích hệ thống xếp một cán bộ coi nhiều ca cùng buổi và cơ sở để tối ưu thời gian chờ.
+    \end{enumerate}
+\end{frame}
+
+% --- SLIDE 10 ---
+\begin{frame}{2.5 Ràng buộc Cứng (Hard Constraints) - Phần 1}
+    Đây là các quy tắc bất khả xâm phạm, nếu vi phạm mô hình sẽ không có nghiệm (Infeasible).
+    \begin{itemize}
+        \item \textbf{HC1 - Availability (Sự khả dụng):} Chỉ phân công cán bộ vào các ca mà họ có thể tham gia.
+        $$x_{ij} \leq A_{ij} \quad \forall i \in I, j \in J$$ 
+        \item \textbf{HC2 - No Time Conflicts (Không xung đột thời gian):} Cán bộ không thể coi hai ca đồng thời hoặc liên tiếp không đủ nghỉ (áp dụng trên tập $O \cup C$).
+        $$x_{i, j_1} + x_{i, j_2} \leq 1 \quad \forall i \in I, (j_1, j_2) \in O \cup C$$ 
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 11 ---
+\begin{frame}{2.5 Ràng buộc Cứng (Hard Constraints) - Phần 2}
+    \begin{itemize}
+        \item \textbf{HC3 - Max 2 Shifts/Day:} Giới hạn số lượng ca gác thi trong một ngày để đảm bảo sức khỏe cán bộ.
+        $$\sum_{j \in D_k} x_{ij} \leq 2 \quad \forall i \in I, \forall D_k$$ 
+        \item \textbf{HC4 - Required Invigilators:} Đảm bảo đủ số lượng cán bộ coi thi. Mỗi ca thi phải có chính xác số lượng cán bộ được yêu cầu ($R_j$).
+        $$\sum_{i \in I} x_{ij} = R_j \quad \forall j \in J$$ 
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 12 ---
+\begin{frame}{2.6 Ràng buộc Mềm (Soft Constraints)}
+    Các ràng buộc mềm được tích hợp trực tiếp vào hàm mục tiêu:
+    \begin{itemize}
+        \item \textbf{SC1 - Campus Preference:} Xử lý thông qua ma trận chi phí tĩnh $C_{ij}$.
+        \item \textbf{SC2 - Fairness (Cân bằng khối lượng công việc):} Liên kết với các biến độ lệch.
+        $$\sum_{j \in J} x_{ij} + d_i^- - d_i^+ = T \quad \forall i \in I$$ 
+        \item \textbf{SC3 - Same Session/Campus (Tuyến tính hóa điều kiện gộp ca):} Ràng buộc để biến $z$ chỉ bằng $1$ khi cả $2$ ca cùng được chọn.
+        $$z_{i, j_1, j_2} \leq x_{i, j_1}$$ 
+        $$z_{i, j_1, j_2} \leq x_{i, j_2}$$ 
+        $$z_{i, j_1, j_2} \geq x_{i, j_1} + x_{i, j_2} - 1 \quad \forall i \in I, (j_1, j_2) \in S$$ 
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 13 ---
+\begin{frame}{2.7 Độ phức tạp của Mô hình (Model Complexity)}
+    \begin{itemize}
+        \item \textbf{Độ phức tạp Không gian (Space Complexity):} Tỷ lệ thuận với số lượng biến và ràng buộc. Không gian lưu trữ tiệm cận $\mathcal{O}(|I|(|J| + |S| + |O \cup C|))$. Việc bổ sung biến phụ trợ $z$ cho các cặp ca thi cùng buổi gia tăng đáng kể kích thước mô hình.
+        \item \textbf{Độ phức tạp Thời gian (Time Complexity):} Do tính chất NP-Khó của ILP, thời gian xấu nhất (worst-case) sử dụng thuật toán Nhánh và Cận (Branch and Bound) tăng theo hàm mũ: $\mathcal{O}(2^{|I|(|J| + |S|)})$.
+        \item \textbf{Khả năng giải thực tế:} Phụ thuộc lớn vào việc cắt tỉa (pruning) của solver thông qua các ràng buộc cứng.
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% --- SECTION 3 ---
+% ==============================================================================
+\section{Code \& Solver Implementation}
+
+% TRANSITION SLIDE 3
+\begin{frame}[plain]
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=12pt,center,shadow=true,rounded=true]{palette primary}
+        \usebeamerfont{title}\Huge \textbf{Phần 3: Code \& Solver Implementation}
+    \end{beamercolorbox}
+    \vspace{0.5cm}
+    \large Kiến trúc phần mềm, Tiền xử lý dữ liệu và Tích hợp bộ giải
+    \vfill
+\end{frame}
+
+% --- SLIDE 14 ---
+\begin{frame}{3.1 Tiền xử lý dữ liệu (Data Preprocessing)}
+    Chương trình preprocessing chuẩn bị dữ liệu đầu vào chuẩn xác cho ILP:
+    \begin{itemize}
+        \item \textbf{Quy trình chính:} Đọc Excel $\rightarrow$ Làm sạch $\rightarrow$ Xây dựng các tập $I, J$ $\rightarrow$ Xây dựng Baseline $\rightarrow$ Tính toán Ma trận $A_{ij}, C_{ij}$ $\rightarrow$ Tìm tập $O, C$ $\rightarrow$ Xuất ra CSV.
+        \item \textbf{Xử lý Ràng buộc:} 
+        \begin{itemize}
+            \item Tạo \texttt{availability\_matrix.csv} phục vụ HC1.
+            \item Phân tích các cặp trùng lặp (\texttt{overlap\_pairs.csv}) và liên tiếp (\texttt{consecutive.csv}) phục vụ HC2.
+            \item Tạo ma trận penalty (\texttt{campus\_penalty.csv}) và mục tiêu fairness (\texttt{fairness\_targets.csv}).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 15 ---
+\begin{frame}{3.2 Triển khai Bộ giải (Solver Integration)}
+    \begin{itemize}
+        \item Toàn bộ mô hình được lập trình bằng \textbf{Python} thông qua thư viện \textbf{PuLP}.
+        \item Engine tối ưu hóa: Bộ giải mã nguồn mở \textbf{COIN-OR Branch and Cut (CBC)}.
+        \item Thuật toán cốt lõi: Branch-and-Cut kết hợp heuristics để cắt tỉa không gian nghiệm khổng lồ hiệu quả.
+        \item \textbf{Tùy biến trọng số:} Cấu hình mặc định trong code là $W_{pref} = 2, W_{fair} = 2, W_{sess} = 1$ để cân bằng chi phí và phần thưởng.
+        \item Có hỗ trợ bật/tắt \texttt{USE\_CONSECUTIVE\_CONSTRAINT} cho quá trình debug nếu mô hình không có nghiệm (infeasible).
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 16 ---
+\begin{frame}{3.3 Luồng thực thi tổng quát (Execution Flow)}
+    Luồng xử lý tuần tự trong hàm \texttt{main()} của solver:
+    \begin{enumerate}
+        \item Đọc dữ liệu đầu vào (\texttt{load\_data}).
+        \item Chuẩn bị tham số và từ điển ánh xạ (\texttt{prepare\_params}).
+        \item Khởi tạo mô hình PuLP và biến quyết định chính (\texttt{build\_model}).
+        \item Thêm ràng buộc cứng (\texttt{add\_hard\_constraints}).
+        \item Thêm ràng buộc cân bằng workload (\texttt{add\_fairness\_constraints}).
+        \item Xây dựng hàm mục tiêu và biến thưởng $z$ (\texttt{set\_objective}).
+        \item Gọi bộ giải CBC (\texttt{solve\_model}).
+        \item Kiểm tra trạng thái và xuất kết quả lịch (\texttt{export\_solution}) cùng file log (\texttt{export\_solver\_log}).
+    \end{enumerate}
+\end{frame}
+
+% ==============================================================================
+% --- SECTION 4 ---
+% ==============================================================================
+\section{Schedule Evaluation and Comparison}
+
+% TRANSITION SLIDE 4
+\begin{frame}[plain]
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=12pt,center,shadow=true,rounded=true]{palette primary}
+        \usebeamerfont{title}\Huge \textbf{Phần 4: Schedule Evaluation and Comparison}
+    \end{beamercolorbox}
+    \vspace{0.5cm}
+    \large Đối sánh định lượng, Đánh giá độ công bằng và Phân tích hiệu suất
+    \vfill
+\end{frame}
+
+% --- SLIDE 17 ---
+\begin{frame}{4.1 Đặc trưng Dữ liệu Thực tế}
+    Phân tích số liệu từ Khoa Khoa học và Kỹ thuật Máy Tính (HCMUT):
+    \begin{itemize}
+        \item Tổng số vị trí phân công cần thiết: 769 lượt.
+        \item \textbf{Phân tích nguyện vọng mô phỏng (Dựa trên lịch sử phân công):}
+        \begin{itemize}
+            \item Ưu tiên Cơ sở 1 (Lý Thường Kiệt): 16 cán bộ (21.92\%).
+            \item Ưu tiên Cơ sở 2 (Dĩ An): 44 cán bộ (60.27\%).
+            \item Nhóm Cân bằng: 13 cán bộ (17.81\%).
+        \end{itemize}
+        \item \textbf{Phân bổ ca thi thực tế:} CS1 có 34 ca (52.31\%) nhưng chỉ có 16 CB ưu tiên; CS2 có 31 ca (47.69\%) lại có 44 CB ưu tiên.
+        \item $\rightarrow$ Sự chênh lệch này đòi hỏi mô hình Toán học để tối ưu hóa và giảm vi phạm nguyện vọng.
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 18 ---
+\begin{frame}{4.2 Đánh giá: Tính khả thi (Hard Constraints)}
+    So sánh lịch mới (Optimized) so với lịch cũ (Baseline):
+    \begin{itemize}
+        \item \textbf{Triệt tiêu hoàn toàn vi phạm ràng buộc cứng:} Lịch cũ tồn tại 342 lỗi vi phạm. Lịch mới đưa con số này về 0 (0 vi phạm).
+        \item Chi tiết vi phạm ở Lịch cũ đã được khắc phục:
+        \begin{itemize}
+            \item Ca thi liền kề không nghỉ: 271 trường hợp $\rightarrow$ Giảm còn 0.
+            \item Vượt quá 2 ca/ngày: 71 trường hợp $\rightarrow$ Giảm còn 0.
+        \end{itemize}
+        \item \textbf{Kết luận:} Lịch mới đảm bảo tính khả thi 100\% để áp dụng vào thực tế.
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 19 ---
+\begin{frame}{4.3 Đánh giá: Cải thiện Độ công bằng (Fairness)}
+    Lịch cũ tồn tại bất cập lớn về công bằng, có cán bộ bị xếp tới 19 ca, trong khi người khác chỉ gác 3 ca. Lịch mới cải thiện vượt bậc:
+    \begin{itemize}
+        \item \textbf{Khoảng phân bố (Workload Range):} Thu hẹp từ $[3, 19]$ ca/người xuống mức phân bố cực kỳ đồng đều là $[6, 11]$ ca/người.
+        \item \textbf{Chỉ số bất bình đẳng Gini:} Giảm sâu 70.35\%, từ $0.1073$ xuống chỉ còn $0.0318$.
+        \item \textbf{Độ lệch chuẩn (Standard Deviation):} Giảm 62.47\% (từ 2.2088 xuống 0.8290).
+        \item Mức phân công đã tiệm cận rất sát với khối lượng trung bình lý tưởng là $\approx 10.53$ ca/cán bộ.
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 20 ---
+\begin{frame}{4.4 Đánh giá: Nguyện vọng và Hàm mục tiêu}
+    Solver tối ưu hóa trải nghiệm đi lại của giảng viên:
+    \begin{itemize}
+        \item \textbf{Vi phạm cơ sở ưa thích (Campus Preference):} Giảm từ 175 ca xuống còn 110 ca (cải thiện 37.14\%).
+        \item \textbf{Số lượng cặp ca ghép thuận lợi:} Tăng mạnh từ 96 cặp lên 141 cặp (tăng 46.88\%) giúp giáo viên hoàn thành nhiệm vụ trong một buổi/ngày mà không phải chờ đợi.
+        \item \textbf{Đánh giá Hàm mục tiêu tổng thể (Objective Value):} Tổng chi phí bao gồm phạt và thưởng đã giảm mạnh từ $484.79$ xuống còn $166.56$ (tương đương giảm 65.64\%).
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 21 ---
+\begin{frame}{4.5 Đánh giá: Hiệu suất tính toán (Performance)}
+    \begin{itemize}
+        \item \textbf{Quy mô mô hình cấp Khoa:} 73 cán bộ, 65 ca thi. Sinh ra 4.745 biến chính và 2.117 biến phụ trợ. Không gian trạng thái gần 7.000 biến nhị phân.
+        \item \textbf{Thời gian thực thi (Runtime):} Bộ giải CBC mất chính xác \textbf{8.06 giây} để đạt được trạng thái nghiệm tối ưu toàn cục (Global Optimum).
+        \item \textbf{Hiệu quả:} Thuật toán Branch-and-Cut tận dụng các ràng buộc cứng làm "mặt cắt" (cutting planes) để loại bỏ hàng triệu nhánh không khả thi, rút ngắn thời gian hội tụ. Mô hình đủ tinh gọn cho quy mô một Khoa.
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% --- SECTION 5 ---
+% ==============================================================================
+\section{Future Extension \& Conclusion}
+
+% TRANSITION SLIDE 5
+\begin{frame}[plain]
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=12pt,center,shadow=true,rounded=true]{palette primary}
+        \usebeamerfont{title}\Huge \textbf{Phần 5: Future Extension \& Conclusion}
+    \end{beamercolorbox}
+    \vspace{0.5cm}
+    \large Giải pháp Heuristics cho quy mô mở rộng và Tổng kết dự án
+    \vfill
+\end{frame}
+
+% --- SLIDE 22 ---
+\begin{frame}{5.1 Hướng phát triển: Heuristics cho quy mô Toàn trường}
+    Khi mở rộng quy mô từ cấp Khoa (73 cán bộ) lên cấp Trường (hơn 1.300 cán bộ, hàng ngàn ca thi), số lượng biến sẽ vượt 3-4 triệu, dẫn tới hiện tượng "Bùng nổ tổ hợp" (Combinatorial Explosion) và Out of Memory ở bộ giải ILP. Đề xuất:
+    \begin{itemize}
+        \item \textbf{Thuật toán Di truyền (Genetic Algorithm - GA):} Xử lý tốt dữ liệu lớn bằng lai ghép (Crossover) và đột biến (Mutation) các "nhiễm sắc thể" lịch thi để thoát cực trị cục bộ.
+        \item \textbf{Luyện kim mô phỏng (Simulated Annealing - SA):} Công cụ tinh chỉnh (fine-tune) cục bộ để cân bằng mức độ công bằng (Fairness).
+        \item \textbf{Phương pháp Lai (Matheuristics):} Dùng GA để giải nhanh ra nghiệm khả thi, rồi nạp vào solver ILP dưới dạng MIP Start để cắt tỉa nhánh ngay từ ban đầu.
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 23 ---
+\begin{frame}{5.2 Hướng phát triển: Nâng cấp Tiền xử lý \& Ràng buộc}
+    Để mô hình thông minh hơn:
+    \begin{itemize}
+        \item \textbf{Ma trận khoảng cách thực tế (Real-world Distance):} Thay vì sử dụng penalty tĩnh, tích hợp API Bản đồ để lấy thời gian di chuyển thực tế giữa các Campus.
+        \item \textbf{Skill-based Metadata:} Thêm ma trận kỹ năng chuyên môn vào ràng buộc (ví dụ: gác thi máy tính, ngoại ngữ).
+        \item \textbf{Ràng buộc nghỉ liên ngày (Inter-day Rest Constraint):} Tránh tình trạng cán bộ gác tối muộn hôm trước và sáng sớm hôm sau.
+        \item \textbf{Tối ưu Đa mục tiêu Lexicographic:} Ưu tiên xử lý thứ tự: Khả thi $\rightarrow$ Công bằng $\rightarrow$ Nguyện vọng.
+    \end{itemize}
+\end{frame}
+
+% --- SLIDE 24 ---
+\begin{frame}{5.3 Kết luận}
+    Phương pháp Quy hoạch tuyến tính nguyên (ILP) đem lại lịch phân công \textbf{vượt trội hoàn toàn} so với lịch gốc:
+    \begin{enumerate}
+        \item \textbf{Khả thi tuyệt đối:} Giải quyết 100\% các vi phạm ràng buộc cứng (trùng ca, liên tiếp, quá tải ngày).
+        \item \textbf{Công bằng \& Nhân văn:} Hệ số Gini giảm hơn 70\%, phân bố công việc cực kỳ đồng đều, triệt tiêu tình trạng quá tải (từ 19 ca xuống tối đa 11 ca).
+        \item \textbf{Thông minh:} Số lượng ca ghép thuận tiện tăng gần 47\%, giảm vi phạm nguyện vọng di chuyển hơn 37\%.
+        \item \textbf{Tốc độ cao:} Trả về nghiệm tối ưu toàn cục chưa tới 10 giây cho dữ liệu cấp Khoa.
+    \end{enumerate}
+    $\rightarrow$ Sẵn sàng áp dụng chính thức cho vận hành thực tế.
+\end{frame}
+
+% --- SLIDE 25 ---
+\begin{frame}
+    \begin{center}
+        \Huge \textbf{Cảm ơn thầy đã lắng nghe!}
+    \end{center}
+\end{frame}
+
+\end{document}
