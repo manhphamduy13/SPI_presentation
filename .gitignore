@@ -1,2 +1,19 @@
 SPI_Dat_Slide_12-22.md
 SPI_Manh_Slide_1-11.md
+
+# LaTeX auxiliary files
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Temporary screenshots and previews
+Screenshot*.png
+slide_page_*.png
+gemini-svg*.svg

@@ -1,13 +1,16 @@
+%!TEX program = xelatex
 \documentclass[10pt,aspectratio=169]{beamer}
 
 % Compile with XeLaTeX
 \usepackage{fontspec}
-\setsansfont{Arial}
-\setmainfont{Times New Roman}
+\setsansfont{Arial}[AutoFakeSlant=0.2]
+\setmainfont{Times New Roman}[AutoFakeBold=1.5,AutoFakeSlant=0.2]
 \usepackage{amsmath,booktabs,array,tabularx}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.geometric,decorations.pathreplacing}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\graphicspath{{images/}}
 
 % ---------- Visual system ----------
 \definecolor{navy}{HTML}{F7F5F0}
@@ -56,9 +59,9 @@
 \setbeamercolor{author in head/foot}{bg=paper,fg=muted}
 \setbeamercolor{date in head/foot}{bg=paper,fg=ink}
 
-\newcommand{\slideno}{\insertframenumber/22}
+\newcommand{\slideno}{\insertframenumber/35}
 \setbeamertemplate{footline}{%
-  \pgfmathsetlengthmacro{\progresswidth}{\paperwidth*\insertframenumber/22}%
+  \pgfmathsetlengthmacro{\progresswidth}{\paperwidth*\insertframenumber/35}%
   \begin{beamercolorbox}[wd=\paperwidth,ht=.7pt,dp=0pt]{author in head/foot}%
     \color{paneltwo}\rule{\paperwidth}{.7pt}\hspace{-\paperwidth}\color{cyan}\rule{\progresswidth}{.7pt}%
   \end{beamercolorbox}%
@@ -132,18 +135,6 @@
    \node[anchor=north west,text=\c,font=\scriptsize\bfseries] at (\x,-.08) {\t};
  }
 \end{tikzpicture}
-\begin{tikzpicture}[remember picture,overlay]
-  \fill[cyan!5] ($(current page.north east)+(-5.7,-1.0)$) -- ($(current page.north east)+(0,-1.0)$) -- ($(current page.north east)+(0,-7.5)$) -- cycle;
-  \node[draw=cyan!75,fill=panel,line width=1.3pt,rounded corners=5pt,minimum width=3.15cm,minimum height=3.15cm] (coverchip) at ($(current page.east)+(-3.0,.65)$) {};
-  \node[text=cyan,font=\rmfamily\bfseries\fontsize{27}{29}\selectfont] at (coverchip) {SPI};
-  \foreach \i in {-1.15,-.38,.38,1.15}{
-    \draw[cyan!75,line width=1.4pt] ($(coverchip.west)+(0,\i)$)--++(-.45,0);
-    \draw[cyan!75,line width=1.4pt] ($(coverchip.east)+(0,\i)$)--++(.45,0);
-  }
-  \draw[blue!28,line width=.7pt] ($(coverchip.east)+(.45,1.15)$)--++(.55,0)--++(.3,.3)--++(.8,0);
-  \draw[orange!30,line width=.7pt] ($(coverchip.east)+(.45,-.38)$)--++(.8,0)--++(.35,-.35)--++(.55,0);
-  \node[font=\tiny,text=muted,anchor=north] at ($(coverchip.south)+(0,-.18)$) {SCLK · MOSI · MISO · CS};
-\end{tikzpicture}
 \end{frame}
 
 % ========================= 2 =========================
@@ -168,10 +159,10 @@
 \end{tikzpicture}
 
 \column{.49\textwidth}
-{\color{muted}\scriptsize 02 — CÁCH HAI BÊN CANH THỜI GIAN}\par\vspace{.25cm}
-\begin{beamercolorbox}[rounded=true,sep=8pt]{block body}
-\textbf{Synchronous}\hfill\pill{cyan}{SPI · I²C}\par\vspace{.25cm}
-{\small Có đường clock riêng; dữ liệu được lấy mẫu theo cạnh clock.}
+{\color{muted}\scriptsize 02 — CÁCH HAI BÊN CANH THỜI GIAN}\par\vspace{.2cm}
+\begin{beamercolorbox}[rounded=true,sep=6.5pt]{block body}
+\textbf{Synchronous}\hfill\pill{cyan}{SPI · I²C}\par\vspace{.15cm}
+{\small Có đường clock riêng; dữ liệu được lấy mẫu theo cạnh clock.}\par\vspace{.12cm}
 \begin{tikzpicture}[x=.46cm,y=.34cm]
   \draw[cyan,thick] (0,0)--(1,0)--(1,1)--(2,1)--(2,0)--(3,0)--(3,1)--(4,1)--(4,0)--(5,0)--(5,1)--(6,1);
   \draw[orange,thick] (0,-1)--(2,-1)--(2,-.35)--(4,-.35)--(4,-1)--(6,-1);
@@ -179,10 +170,10 @@
   \node[anchor=east,text=muted,font=\tiny] at (0,-.7){DATA};
 \end{tikzpicture}
 \end{beamercolorbox}
-\vspace{.25cm}
-\begin{beamercolorbox}[rounded=true,sep=8pt]{block body}
-\textbf{Asynchronous}\hfill\pill{orange}{UART}\par\vspace{.25cm}
-{\small Không có clock chung; hai bên thống nhất baud rate, dùng start/stop bit.}
+\vspace{.18cm}
+\begin{beamercolorbox}[rounded=true,sep=6.5pt]{block body}
+\textbf{Asynchronous}\hfill\pill{orange}{UART}\par\vspace{.15cm}
+{\small Không có clock chung; hai bên thống nhất baud rate, dùng start/stop bit.}\par\vspace{.12cm}
 \begin{tikzpicture}[x=.46cm,y=.34cm]
   \draw[orange,thick] (0,1)--(.7,1)--(.7,0)--(1.4,0)--(1.4,1)--(2.1,1)--(2.1,0)--(2.8,0)--(2.8,1)--(4.9,1)--(4.9,0)--(5.6,0)--(5.6,1)--(6.2,1);
   \node[text=muted,font=\tiny] at (1.05,-.45){start}; \node[text=muted,font=\tiny] at (5.25,-.45){stop};
@@ -327,7 +318,7 @@
 
  % Mỗi peripheral có một chân CS riêng.
  \foreach \y/\n/\start in {2/1/-1.08,0/2/-1.88,-2/3/-2.68}{
-   \draw[green!90,thick,-Latex] ($(c.east)+(0,\start)$) -| (6.35,{\y-.58}) -- node[below,text=green,font=\tiny\bfseries]{CS\n} (7.05,{\y-.58});
+   \draw[green!90,thick,-Latex] ($(c.east)+(0,\start)$) -| (6.25,{\y-.62}) -- node[below=0.5pt,pos=0.45,text=green,font=\tiny\bfseries]{CS\n} (7.05,{\y-.62});
  }
  \node[note,text width=2.45cm,minimum width=2.7cm] at (3.0,-3.15) {\textcolor{cyan}{SCLK} + \textcolor{blue}{MOSI} + \textcolor{orange}{MISO} dùng chung};
 \end{tikzpicture}
@@ -339,7 +330,7 @@
 {\color{orange}\bfseries Quy tắc MISO}\par\vspace{.25cm}
 {\small Peripheral không được chọn phải nhả MISO về \textbf{high-Z}. Hai chip cùng lái đường này $\Rightarrow$ bus contention.}
 \end{beamercolorbox}
-\vspace{.28cm}
+\vspace{.18cm}
 {\color{cyan}\bfseries DAISY-CHAIN}\par\vspace{.2cm}
 \begin{tikzpicture}[node distance=.28cm]
  \node[smallchip,minimum width=1.0cm] (m) {MCU};
@@ -378,7 +369,7 @@
  \draw[muted,thick,-Latex] (ctl.south)--node[right,text=muted,font=\tiny]{điều khiển} (sr1.north);
  \draw[cyan,very thick] (clk.east)--node[below,text=cyan,font=\scriptsize\bfseries]{SCLK} (sr2.south |- clk.east);
  \draw[sig,cyan] (sr2.south |- clk.east)--(sr2.south);
- \node[note,minimum width=3.0cm] at (7.2,1.45) {MOSI + MISO tạo\\\textbf{vòng dịch hai chiều}};
+ \node[note,minimum width=2.8cm] at (7.4,1.35) {MOSI + MISO tạo\\\textbf{vòng dịch hai chiều}};
 \end{tikzpicture}
 \end{center}
 \vspace{.25cm}
@@ -400,17 +391,19 @@
 \column{.48\textwidth}
 {\color{cyan}\bfseries MỖI CLOCK = 1 BIT GỬI + 1 BIT NHẬN}\par\vspace{.22cm}
 \begin{tikzpicture}[x=.49cm,y=.55cm]
- \node[text=muted,font=\scriptsize,anchor=east] at (-.3,.5){CTRL};
- \foreach \x/\v in {0/1,1/0,2/1,3/0,4/0,5/1,6/0,7/1}{\node[bit] at (\x,.5){\v};}
- \node[text=blue,font=\scriptsize\bfseries,anchor=west] at (8,.5){0xA5};
- \node[text=muted,font=\scriptsize,anchor=east] at (-.3,-1){PERI};
- \foreach \x/\v in {0/0,1/0,2/1,3/1,4/1,5/1,6/0,7/0}{\node[bit,draw=orange!75] at (\x,-1){\v};}
- \node[text=orange,font=\scriptsize\bfseries,anchor=west] at (8,-1){0x3C};
- \draw[sig,blue] (1,-.05)--node[above,text=blue,font=\tiny]{MOSI}(6,-.05);
- \draw[sig,orange] (6,-.45)--node[below,text=orange,font=\tiny]{MISO}(1,-.45);
- \draw[decorate,decoration={brace,mirror,amplitude=5pt},cyan] (-.3,-1.55)--(7.3,-1.55) node[midway,below=.15cm,text=ink,font=\scriptsize]{8 xung $\Rightarrow$ hoán đổi 1 frame};
+ \node[text=muted,font=\scriptsize,anchor=east] at (-.3,1.1){CTRL};
+ \foreach \x/\v in {0/1,1/0,2/1,3/0,4/0,5/1,6/0,7/1}{\node[bit] at (\x,1.1){\v};}
+ \node[text=blue,font=\scriptsize\bfseries,anchor=west] at (8,1.1){0xA5};
+ \node[text=muted,font=\scriptsize,anchor=east] at (-.3,-1.35){PERI};
+ \foreach \x/\v in {0/0,1/0,2/1,3/1,4/1,5/1,6/0,7/0}{\node[bit,draw=orange!75] at (\x,-1.35){\v};}
+ \node[text=orange,font=\scriptsize\bfseries,anchor=west] at (8,-1.35){0x3C};
+ \draw[sig,blue] (1,.25)--(6,.25);
+ \node[text=blue,font=\tiny\bfseries,fill=navy,inner sep=1.2pt] at (3.5,.25){MOSI};
+ \draw[sig,orange] (6,-.50)--(1,-.50);
+ \node[text=orange,font=\tiny\bfseries,fill=navy,inner sep=1.2pt] at (3.5,-.50){MISO};
+ \draw[decorate,decoration={brace,mirror,amplitude=5pt},cyan] (-.3,-1.95)--(7.3,-1.95) node[midway,below=.15cm,text=ink,font=\scriptsize]{8 xung $\Rightarrow$ hoán đổi 1 frame};
 \end{tikzpicture}
-\vspace{.55cm}
+\vspace{.25cm}
 \begin{beamercolorbox}[rounded=true,sep=8pt]{block body}
 {\small\textbf{MSB-first} (phổ biến) hoặc \textbf{LSB-first} (tùy thiết bị).}\par\vspace{.2cm}
 {\small Sau 8 xung: controller nhận \textcolor{orange}{\textbf{0x3C}}, peripheral nhận \textcolor{blue}{\textbf{0xA5}}.}
@@ -434,7 +427,7 @@
    \node[text=orange,font=\tiny\bfseries] at ({2+2*\i},{-.75+.9*\v}){\v};
  }
  \foreach \x in {1,3,...,15}{\draw[green!75,dashed,thin] (\x,-1.45)--(\x,3.25);}
- \node[note,minimum width=4.55cm] at (8,-2.1) {Muốn \textbf{đọc} vẫn phải phát clock\\$\Rightarrow$ controller gửi dummy byte};
+ \node[note,minimum width=4.55cm] at (8,-2.35) {Muốn \textbf{đọc} vẫn phải phát clock\\$\Rightarrow$ controller gửi dummy byte};
 \end{tikzpicture}
 \end{columns}
 \vfill
@@ -461,10 +454,10 @@
  \node[text=ink,font=\bfseries] at (8.4,.7){DUMMY};
  \node[text=ink,font=\bfseries] at (12.05,.7){DATA ···};
  \draw[decorate,decoration={brace,mirror,amplitude=6pt},cyan] (1,-.1)--(4,-.1) node[midway,below=.25cm,text=muted,font=\scriptsize]{1 frame = 8 bit (thường gặp)};
- \draw[decorate,decoration={brace,mirror,amplitude=8pt},orange] (1,-1.15)--(14.5,-1.15) node[midway,below=.28cm,text=ink,font=\bfseries\scriptsize]{1 transaction = toàn bộ thời gian CS ở mức active};
+ \draw[decorate,decoration={brace,mirror,amplitude=7pt},orange] (1,-1.42)--(14.5,-1.42) node[midway,below=.25cm,text=ink,font=\bfseries\scriptsize]{1 transaction = toàn bộ thời gian CS ở mức active};
 \end{tikzpicture}
 \end{center}
-\vspace{.25cm}
+\vspace{.15cm}
 \begin{columns}[T,onlytextwidth]
 \column{.24\textwidth}
 \textcolor{blue}{\bfseries COMMAND}\par{\small\color{muted}Đọc, ghi, xóa hoặc opcode.}
@@ -496,7 +489,7 @@
  \fill[green!42] (3,0) rectangle (6,1); \node[text=ink,font=\bfseries\scriptsize] at (4.5,.5){DATA};
  \draw[green,thick] (-.35,1.35)--(0,1.35)--(0,1.12)--(6,1.12)--(6,1.35)--(6.35,1.35);
  \node[text=muted,font=\tiny,anchor=east] at (-.4,1.28){CS};
-\end{tikzpicture}
+\end{tikzpicture}\par\vspace{.12cm}
 {\small CS$\downarrow$ $\rightarrow$ lệnh/địa chỉ $\rightarrow$ dữ liệu $\rightarrow$ CS$\uparrow$}
 \end{beamercolorbox}
 \vspace{.15cm}
@@ -508,7 +501,7 @@
  \fill[green!42] (4.6,0) rectangle (6.7,1); \node[text=ink,font=\bfseries\scriptsize] at (5.65,.5){DATA};
  \draw[green,thick] (-.35,1.35)--(0,1.35)--(0,1.12)--(6.7,1.12)--(6.7,1.35)--(7.05,1.35);
  \node[text=muted,font=\tiny,anchor=east] at (-.4,1.28){CS};
-\end{tikzpicture}
+\end{tikzpicture}\par\vspace{.12cm}
 {\small Gửi \textbf{dummy 0x00} để tạo 8 clock; dữ liệu thực đi về trên MISO.}
 \end{beamercolorbox}
 
@@ -522,7 +515,7 @@
  \fill[blue!45] (0,0) rectangle (1.8,.8); \node[text=ink,font=\tiny\bfseries] at (.9,.4){CMD};
  \foreach \x/\n in {1.8/0,3.1/1,4.4/2,5.7/3}{\fill[green!42] (\x,0) rectangle ++(1.25,.8);\node[text=ink,font=\tiny\bfseries] at (\x+.625,.4){D\n};}
  \draw[decorate,decoration={brace,mirror,amplitude=5pt},orange] (0,-.12)--(6.95,-.12) node[midway,below=.2cm,text=muted,font=\tiny]{giữ CS thấp · địa chỉ thường tự tăng};
-\end{tikzpicture}
+\end{tikzpicture}\par\vspace{.12cm}
 {\small Một lệnh, nhiều byte $\Rightarrow$ giảm overhead so với nhiều transaction rời.}
 \end{beamercolorbox}
 \vspace{.15cm}
@@ -663,8 +656,11 @@ Mode & CPOL & CPHA & Idle & Sample & Shift\\
    \node[anchor=west,text=green,font=\bfseries\scriptsize] at (4.2,{2.4-1.25*\row}) {sample \sample};
  }
  \draw[cyan!35,thick] (-1,-1.95) rectangle (7.15,3.05);
- \node[note,text width=3.55cm,minimum width=3.9cm] at (3.05,-2.75) {Tên mode có thể khác giữa datasheet — hãy đối chiếu \textbf{waveform}.};
 \end{tikzpicture}
+\vspace{.15cm}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+{\scriptsize\color{ink} Tên mode có thể khác giữa datasheet — hãy đối chiếu \textbf{waveform}.}
+\end{beamercolorbox}
 \end{columns}
 \vfill
 \source{\href{https://www.analog.com/en/resources/analog-dialogue/articles/introduction-to-spi-interface.html}{Analog Devices — Four SPI modes}.}
@@ -677,7 +673,7 @@ Mode & CPOL & CPHA & Idle & Sample & Shift\\
 \begin{columns}[T,onlytextwidth]
 \column{.49\textwidth}
 \pill{cyan}{MODE 0 · CPOL 0 · CPHA 0}\par\vspace{.18cm}
-{\small\color{muted}Idle LOW · bit đầu hợp lệ trước cạnh lên đầu tiên}\par\vspace{.12cm}
+{\footnotesize\color{muted}Idle LOW · bit đầu hợp lệ trước cạnh lên đầu tiên}\par\vspace{.12cm}
 \begin{tikzpicture}[x=.38cm,y=.42cm]
  \node[anchor=east,text=muted,font=\tiny] at (0,3.35){CS};
  \draw[green,thick] (0,3.7)--(.8,3.7)--(.8,3.0)--(11.7,3.0)--(11.7,3.7)--(12.5,3.7);
@@ -685,7 +681,7 @@ Mode & CPOL & CPHA & Idle & Sample & Shift\\
  \draw[cyan,thick] (0,1.7)--(1,1.7);
  \foreach \x in {1,3,5,7,9}{\draw[cyan,thick] (\x,1.7)--(\x,2.6)--(\x+1,2.6)--(\x+1,1.7)--(\x+2,1.7);}
  \node[anchor=east,text=muted,font=\tiny] at (0,.65){DATA};
- \foreach \x/\v in {1/D7,3/D6,5/D5,7/D4,9/…}{\fill[blue!25] (\x,.2) rectangle ++(2,.9);\draw[blue] (\x,.2) rectangle ++(2,.9);\node[text=ink,font=\tiny\bfseries] at (\x+1,.65){\v};}
+ \foreach \x/\v in {1/D7,3/D6,5/D5,7/D4,9/$\dots$}{\fill[blue!25] (\x,.2) rectangle ++(2,.9);\draw[blue] (\x,.2) rectangle ++(2,.9);\node[text=ink,font=\tiny\bfseries] at (\x+1,.65){\v};}
  \foreach \x in {1,3,5,7,9}{\draw[green!85,dashed] (\x,-.05)--(\x,2.85);\node[text=green,font=\tiny] at (\x,-.35){sample};}
 \end{tikzpicture}
 \vspace{.28cm}
@@ -695,7 +691,7 @@ Mode & CPOL & CPHA & Idle & Sample & Shift\\
 
 \column{.49\textwidth}
 \pill{orange}{MODE 3 · CPOL 1 · CPHA 1}\par\vspace{.18cm}
-{\small\color{muted}Idle HIGH · bit đầu xuất hiện ở cạnh xuống đầu tiên}\par\vspace{.12cm}
+{\footnotesize\color{muted}Idle HIGH · bit đầu xuất hiện tại cạnh xuống đầu tiên}\par\vspace{.12cm}
 \begin{tikzpicture}[x=.38cm,y=.42cm]
  \node[anchor=east,text=muted,font=\tiny] at (0,3.35){CS};
  \draw[green,thick] (0,3.7)--(.8,3.7)--(.8,3.0)--(11.7,3.0)--(11.7,3.7)--(12.5,3.7);
@@ -703,9 +699,9 @@ Mode & CPOL & CPHA & Idle & Sample & Shift\\
  \draw[orange,thick] (0,2.6)--(1,2.6);
  \foreach \x in {1,3,5,7,9}{\draw[orange,thick] (\x,2.6)--(\x,1.7)--(\x+1,1.7)--(\x+1,2.6)--(\x+2,2.6);}
  \node[anchor=east,text=muted,font=\tiny] at (0,.65){DATA};
- \fill[muted!18] (0,.2) rectangle (1,.9); \node[text=muted,font=\tiny] at (.5,.65){?};
- \foreach \x/\v in {1/D7,3/D6,5/D5,7/D4,9/…}{\fill[orange!22] (\x,.2) rectangle ++(2,.9);\draw[orange] (\x,.2) rectangle ++(2,.9);\node[text=ink,font=\tiny\bfseries] at (\x+1,.65){\v};}
  \foreach \x in {2,4,6,8,10}{\draw[green!85,dashed] (\x,-.05)--(\x,2.85);\node[text=green,font=\tiny] at (\x,-.35){sample};}
+ \fill[muted!18] (0,.2) rectangle (1,.9); \node[text=muted,font=\tiny] at (.5,.65){?};
+ \foreach \x/\v in {1/D7,3/D6,5/D5,7/D4,9/$\dots$}{\fill[orange!22] (\x,.2) rectangle ++(2,.9);\draw[orange] (\x,.2) rectangle ++(2,.9);\node[text=ink,font=\tiny\bfseries,fill=orange!22,inner sep=0.8pt] at (\x+1,.65){\v};}
 \end{tikzpicture}
 \vspace{.28cm}
 \begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
@@ -717,7 +713,7 @@ Mode & CPOL & CPHA & Idle & Sample & Shift\\
 \end{frame}
 
 % ========================= 15 =========================
-\begin{frame}[shrink=10]{Timing Constraints}
+\begin{frame}[shrink=4]{Timing Constraints}
 \transwipe[direction=90,duration=.35]
 \vspace{-.18cm}
 \begin{columns}[T,onlytextwidth]
@@ -743,21 +739,19 @@ CS setup/hold & Khoảng bảo vệ trước xung đầu / sau xung cuối\\
 $t_{HIGH}/t_{LOW}$ & Độ rộng tối thiểu hai nửa chu kỳ\\
 \end{tabularx}
 
-\column{.42\textwidth}
-\begin{beamercolorbox}[rounded=true,sep=8pt]{block body}
-{\color{orange}\bfseries TIMING BUDGET · MISO}\par\vspace{.3cm}
-{\small\centering $\displaystyle \frac{T_{SCLK}}{2}\ge t_{pd,clk}+t_{CO}+t_{pd,data}+t_{su}$\par}
-\end{beamercolorbox}
-\vspace{.28cm}
-{\small\color{muted}Ví dụ \textbf{giả định}:}\par\vspace{.12cm}
-\begin{align*}
-t_{CO}&=15\,ns,\quad t_{su}=5\,ns\\
-t_{pd,clk}&=t_{pd,data}=1\,ns\\[-2pt]
-T/2&\ge22\,ns\Rightarrow T\ge44\,ns
-\end{align*}
-\begin{center}\metric{orange}{$f_{SCLK}\le22.7$ MHz}{giới hạn từ ví dụ giả định}\end{center}
-\vspace{.15cm}
+\column{.43\textwidth}
 \begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\color{orange}\bfseries TIMING BUDGET · MISO}\par\vspace{.15cm}
+{\small\centering $\frac{T_{SCLK}}{2}\ge t_{pd,clk}+t_{CO}+t_{pd,data}+t_{su}$\par}
+\end{beamercolorbox}
+\vspace{.15cm}
+{\small\color{muted}Ví dụ \textbf{giả định}:}\par\vspace{.08cm}
+{\small $t_{CO}=15\,\text{ns},\quad t_{su}=5\,\text{ns}$}\par
+{\small $t_{pd,clk}=t_{pd,data}=1\,\text{ns}$}\par
+{\small $T/2\ge22\,\text{ns}\;\Rightarrow\; T\ge44\,\text{ns}$}\par\vspace{.12cm}
+\begin{center}\metric{orange}{$f_{SCLK}\le22.7$ MHz}{giới hạn từ ví dụ giả định}\end{center}
+\vspace{.12cm}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
 {\scriptsize Sai mode hoặc thiếu setup/hold $\Rightarrow$ lấy mẫu đúng lúc dữ liệu đang đổi $\Rightarrow$ lệch bit.}
 \end{beamercolorbox}
 \end{columns}
@@ -766,13 +760,13 @@ T/2&\ge22\,ns\Rightarrow T\ge44\,ns
 \end{frame}
 
 % ========================= 16 =========================
-\begin{frame}[shrink=14]{Clock Frequency \& Data Throughput}
+\begin{frame}[shrink=4]{Clock Frequency \& Data Throughput}
 \transfade[duration=.35]
 \vspace{-.2cm}
 \begin{columns}[T,onlytextwidth]
 \column{.42\textwidth}
-\begin{beamercolorbox}[rounded=true,sep=9pt]{block body}
-{\color{cyan}\bfseries RAW THROUGHPUT}\par\vspace{.3cm}
+\begin{beamercolorbox}[rounded=true,sep=8pt]{block body}
+{\color{cyan}\bfseries RAW THROUGHPUT}\par\vspace{.2cm}
 {\small Bit rate $=f_{SCLK}$}\par
 {\small Byte rate $=f_{SCLK}/8$}\par
 {\small $t_N=8N/f_{SCLK}$}
@@ -789,13 +783,13 @@ T/2&\ge22\,ns\Rightarrow T\ge44\,ns
 
 \column{.54\textwidth}
 {\color{muted}\scriptsize HIỆU SUẤT PAYLOAD / TỔNG BYTE TRÊN BUS}\par\vspace{.28cm}
-\begin{tikzpicture}[x=.055cm,y=.9cm]
+\begin{tikzpicture}[x=.041cm,y=.85cm]
  \foreach \y/\label/\val/\time in {3/1 byte/20/4 µs,2/256 byte/98.5/208 µs,1/4096 byte/99.9/3.28 ms}{
    \node[anchor=east,text=ink,font=\scriptsize\bfseries] at (-3,\y){\label};
    \fill[paneltwo] (0,\y-.24) rectangle (100,\y+.24);
    \fill[cyan!80] (0,\y-.24) rectangle (\val,\y+.24);
    \node[anchor=west,text=ink,font=\scriptsize\bfseries] at (102,\y){\val\%};
-   \node[anchor=west,text=muted,font=\tiny] at (116,\y){\time};
+   \node[anchor=west,text=muted,font=\tiny] at (126,\y){\time};
  }
  \draw[muted,thin] (0,.55)--(100,.55);
  \node[anchor=west,text=muted,font=\tiny] at (0,.25){0\%}; \node[anchor=east,text=muted,font=\tiny] at (100,.25){100\%};
@@ -824,10 +818,10 @@ T/2&\ge22\,ns\Rightarrow T\ge44\,ns
  \node[device,minimum width=1.9cm,minimum height=2.0cm] (m) at (0,0) {\bfseries MCU\\\color{cyan}\large 3.3 V};
  \node[smallchip,minimum width=1.8cm,minimum height=1.65cm,draw=green] (l) at (3.05,0) {LEVEL\\SHIFTER};
  \node[device,minimum width=1.95cm,minimum height=2.0cm,draw=orange] (p) at (6.1,0) {\bfseries PERIPHERAL\\\color{orange}\large 1.8 V};
- \draw[sig,blue] (m.north east)--node[above,text=blue,font=\tiny\bfseries]{SCLK · MOSI · CS}(l.north west);
- \draw[sig,blue] (l.north east)--(p.north west);
- \draw[sig,orange] (p.south west)--(l.south east);
- \draw[sig,orange] (l.south west)--node[below,text=orange,font=\tiny\bfseries]{MISO}(m.south east);
+ \draw[sig,blue] ($(m.east)+(0,.45)$)--node[above,text=blue,font=\tiny\bfseries]{SCLK · MOSI · CS}($(l.west)+(0,.45)$);
+ \draw[sig,blue] ($(l.east)+(0,.45)$)--($(p.west)+(0,.45)$);
+ \draw[sig,orange] ($(p.west)+(0,-.45)$)--($(l.east)+(0,-.45)$);
+ \draw[sig,orange] ($(l.west)+(0,-.45)$)--node[below,text=orange,font=\tiny\bfseries]{MISO}($(m.east)+(0,-.45)$);
 \end{tikzpicture}
 \vspace{.3cm}
 \begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
@@ -868,8 +862,7 @@ T/2&\ge22\,ns\Rightarrow T\ge44\,ns
 {\color{cyan}\bfseries SCLK LÝ TƯỞNG}\par\vspace{.15cm}
 \begin{tikzpicture}[x=.52cm,y=.5cm]
  \draw[cyan,very thick] (0,0)--(1,0)--(1,1.3)--(3,1.3)--(3,0)--(5,0)--(5,1.3)--(7,1.3);
-\end{tikzpicture}
-\vspace{.22cm}
+\end{tikzpicture}\par\vspace{.22cm}
 {\color{orange}\bfseries SCLK CÓ RINGING}\par\vspace{.15cm}
 \begin{tikzpicture}[x=.52cm,y=.5cm]
  \draw[orange,very thick] plot[smooth] coordinates {(0,0)(1,0)(1.05,1.7)(1.2,.9)(1.4,1.55)(1.7,1.18)(2.1,1.35)(3,1.3)(3.05,-.45)(3.2,.35)(3.45,-.2)(3.8,.08)(5,0)(5.05,1.7)(5.2,.9)(5.5,1.45)(6,1.28)(7,1.3)};
@@ -947,7 +940,7 @@ T/2&\ge22\,ns\Rightarrow T\ge44\,ns
 \vspace{-.2cm}
 \begin{columns}[T,onlytextwidth]
 \column{.67\textwidth}
-\begin{tikzpicture}[x=.78cm,y=.8cm]
+\begin{tikzpicture}[x=.74cm,y=.8cm]
  \foreach \y/\name/\clr/\desc in {3/POLLING/cyan/CPU đọc cờ liên tục,2/INTERRUPT/orange/CPU chạy ISR theo sự kiện,1/DMA/green/DMA tự chuyển RAM ↔ SPI}{
    \node[smallchip,minimum width=1.8cm,draw=\clr] (n\y) at (0,\y) {\name};
    \node[anchor=west,text=ink,font=\scriptsize] at (1.6,\y+.18){\desc};
@@ -1011,7 +1004,7 @@ function read\_register(addr):\\
 \end{beamercolorbox}
 \vspace{.25cm}
 \begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
-{\ttfamily\tiny
+{\ttfamily\scriptsize
 uint8\_t tx[2] = \{0x8F, 0x00\}; // minh họa\\
 uint8\_t rx[2];\\[2pt]
 HAL\_GPIO\_WritePin(CS, RESET);\\
@@ -1044,53 +1037,682 @@ uint8\_t value = rx[1];
 \end{frame}
 
 % ========================= 22 =========================
-\begin{frame}[shrink=13]{Performance Optimization}
+\begin{frame}[shrink=8]{Performance Optimization}
 \transfade[duration=.4]
 \vspace{-.2cm}
 \begin{columns}[T,onlytextwidth]
 \column{.47\textwidth}
-{\color{cyan}\bfseries 4 ĐÒN BẨY HIỆU NĂNG}\par\vspace{.2cm}
-\begin{tikzpicture}[node distance=.18cm]
+{\color{cyan}\bfseries 4 ĐÒN BẨY HIỆU NĂNG}\par\vspace{.15cm}
+\begin{tikzpicture}[node distance=.14cm]
  \node[smallchip,minimum width=5.65cm,draw=cyan] (a) {1 · Vài byte: polling · khối lớn: DMA};
  \node[smallchip,minimum width=5.65cm,draw=green,below=of a] (b) {2 · Gộp burst · giữ CS thấp};
  \node[smallchip,minimum width=5.65cm,draw=blue,below=of b] (c) {3 · Buffer + FIFO · giảm số ngắt};
  \node[smallchip,minimum width=5.65cm,draw=orange,below=of c] (d) {4 · Loại khoảng trống phần mềm};
 \end{tikzpicture}
-\vspace{.28cm}
-\begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
+\vspace{.2cm}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
 {\small 10 MHz $\Rightarrow$ 0.8 $\mu$s/byte. Nếu một IRQ tốn 1–2 $\mu$s (\textbf{giả định}), CPU không thể xử lý ngắt theo từng byte $\Rightarrow$ FIFO/DMA.}
 \end{beamercolorbox}
-\vspace{.25cm}
-\begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
-{\color{cyan}\bfseries SPEED CEILING}\par\vspace{.15cm}
+\vspace{.18cm}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\color{cyan}\bfseries SPEED CEILING}\par\vspace{.12cm}
 {\scriptsize $f_{max}=\min(\text{chip},\ \text{MCU/pad},\ \text{timing margin},\ \text{signal integrity})$}
 \end{beamercolorbox}
 
 \column{.49\textwidth}
-{\color{orange}\bfseries DMA COMPLETE ≠ BUS IDLE}\par\vspace{.18cm}
-\begin{tikzpicture}[x=.65cm,y=.62cm]
+{\color{orange}\bfseries DMA COMPLETE ≠ BUS IDLE}\par\vspace{.15cm}
+\begin{tikzpicture}[x=.65cm,y=.55cm]
  \node[anchor=east,text=muted,font=\tiny] at (0,2.5){DMA};
  \draw[green,very thick] (0,2.2)--(4.1,2.2); \draw[muted!45,very thick] (4.1,2.2)--(8,2.2);
- \node[text=green,font=\tiny\bfseries] at (4.1,2.7){COMPLETE};
  \draw[green!80,dashed] (4.1,-.1)--(4.1,3);
+ \node[text=green,font=\tiny\bfseries,fill=navy,inner sep=1pt] at (4.1,2.7){COMPLETE};
  \node[anchor=east,text=muted,font=\tiny] at (0,1.25){SPI BUSY};
  \draw[orange,very thick] (0,.95)--(6.3,.95); \draw[muted!45,very thick] (6.3,.95)--(8,.95);
- \node[text=orange,font=\tiny\bfseries] at (6.3,1.45){BUSY = 0};
  \draw[orange!80,dashed] (6.3,-.1)--(6.3,1.75);
+ \node[text=orange,font=\tiny\bfseries,fill=navy,inner sep=1pt] at (6.3,1.45){BUSY = 0};
  \node[anchor=east,text=muted,font=\tiny] at (0,.1){CS};
  \draw[cyan,very thick] (0,.35)--(7.2,.35)--(7.2,-.35)--(8,-.35);
  \draw[red,very thick,-Latex] (4.1,-.65)--(4.1,.15); \node[text=red,font=\tiny\bfseries,align=center] at (4.1,-1.05){CS↑ ở đây\\cắt bit cuối};
  \draw[green,very thick,-Latex] (6.3,-.65)--(6.3,.15); \node[text=green,font=\tiny\bfseries,align=center] at (6.3,-1.05){đợi BUSY=0\\rồi CS↑};
 \end{tikzpicture}
-\vspace{.3cm}
-\begin{beamercolorbox}[rounded=true,sep=8pt]{block body}
+\vspace{.2cm}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
 {\small DMA chỉ báo RAM đã chuyển dữ liệu vào SPI; shift register có thể vẫn đang phát bit cuối.}
 \end{beamercolorbox}
-\vspace{.25cm}
+\vspace{.18cm}
 \pill{cyan}{TIẾP THEO: APPLICATIONS · DEBUG · CASE STUDIES}
 \end{columns}
 \vfill
 \source{Ngưỡng chuyển DMA và chi phí IRQ phụ thuộc nền tảng; phải benchmark và kiểm tra cờ BUSY theo reference manual.}
 \end{frame}
+
+% ========================= 23 =========================
+\begin{frame}[shrink=4]{SPI Applications Overview}
+\transfade[duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.49\textwidth}
+{\color{cyan}\scriptsize PHẦN 03 — ỨNG DỤNG, GỠ LỖI \& CA THỰC TẾ}\par\vspace{.18cm}
+{\color{cyan}\bfseries VỊ TRÍ KỸ THUẬT CỦA SPI}\par\vspace{.1cm}
+{\small Đặc tính: Băng thông lớn (10–100+ MHz), truyền song công (Full-duplex), giao thức nhẹ, không cần điện trở kéo làm trễ sườn xung như I²C.}\par\vspace{.18cm}
+
+\begin{tikzpicture}[node distance=.12cm]
+ \node[smallchip,minimum width=5.9cm,text width=5.6cm,anchor=west,draw=cyan] (a) at (0,0) {\textbf{1 · Bộ nhớ \& Boot:} NOR Flash (W25Q), EEPROM, SD Card};
+ \node[smallchip,minimum width=5.9cm,text width=5.6cm,anchor=west,draw=green,below=of a] (b) {\textbf{2 · Cảm biến đo lường:} Gia tốc, Con quay (BMI270), Áp suất};
+ \node[smallchip,minimum width=5.9cm,text width=5.6cm,anchor=west,draw=orange,below=of b] (c) {\textbf{3 · Bộ biến đổi Analog:} ADC/DAC chính xác cao (ADS124S08)};
+ \node[smallchip,minimum width=5.9cm,text width=5.6cm,anchor=west,draw=blue,below=of c] (d) {\textbf{4 · Hiển thị \& Ngoại vi:} Màn hình TFT (ILI9341), LoRa, LAN};
+\end{tikzpicture}
+\vspace{.2cm}
+\pill{cyan}{Flash / SD}\hspace{.3em}\pill{green}{IMU}\hspace{.3em}\pill{orange}{ADC 24-bit}\hspace{.3em}\pill{blue}{TFT DMA}
+
+\column{.49\textwidth}
+\begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
+{\color{cyan}\bfseries TIÊU CHÍ CHỌN GIAO THỨC}\par\vspace{.1cm}
+\begin{itemize}\small
+ \item \textbf{Thông lượng cao:} Phù hợp truyền dữ liệu khối liên tục (frame màn hình LCD, âm thanh số, log thẻ nhớ).
+ \item \textbf{Độ trễ thấp:} Truy cập thanh ghi và lấy mẫu cảm biến theo thời gian thực (chu kỳ micro-giây).
+ \item \textbf{Thực thi tại chỗ (XIP):} Cho phép CPU chạy mã trực tiếp từ bộ nhớ ngoài qua giao diện QSPI/OSPI.
+\end{itemize}
+\end{beamercolorbox}
+\vspace{.2cm}
+\begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
+{\color{orange}\bfseries GIỚI HẠN PHẦN CỨNG}\par\vspace{.1cm}
+{\small Tốn chân điều khiển ($3 + N$ chân cho $N$ ngoại vi), tín hiệu single-ended suy hao nhanh khi khoảng cách PCB $>30\text{ cm}$.}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{Tài liệu kỹ thuật vi điều khiển: STM32, ESP32 và các họ IC ngoại vi công nghiệp.}
+\end{frame}
+
+% ========================= 24 =========================
+\begin{frame}[shrink=4]{Application 1: SPI Flash Memory}
+\transdissolve[duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.50\textwidth}
+{\color{cyan}\bfseries WINBOND W25Q128JV · 128M-BIT NOR FLASH}\par\vspace{.1cm}
+\centering
+\begin{tikzpicture}[auto,>=Latex,every text node part/.style={align=center}]
+ \node[device,draw=cyan,minimum width=1.8cm,minimum height=2.2cm] (mcu) at (0,0) {\textbf{MCU}\\\tiny SPI Master};
+ \node[device,draw=orange,minimum width=2.0cm,minimum height=2.2cm] (flash) at (3.5,0) {\textbf{W25Q128JV}\\\tiny 16 MByte Flash};
+ \draw[->,thick,cyan] ([yshift=7mm]mcu.east) -- node[above,font=\tiny\bfseries]{/CS (Pin 1)} ([yshift=7mm]flash.west);
+ \draw[->,thick,cyan] ([yshift=2mm]mcu.east) -- node[above,font=\tiny\bfseries]{CLK (Pin 6)} ([yshift=2mm]flash.west);
+ \draw[->,thick,cyan] ([yshift=-3mm]mcu.east) -- node[above,font=\tiny\bfseries]{DI / IO0 (Pin 5)} ([yshift=-3mm]flash.west);
+ \draw[->,thick,orange] ([yshift=-8mm]flash.west) -- node[below,font=\tiny\bfseries]{DO / IO1 (Pin 2)} ([yshift=-8mm]mcu.east);
+ \node[draw=orange!60,fill=orange!8,rounded corners=2pt,font=\tiny,below=.12cm of flash] {/WP (Pin 3) \& /HOLD (Pin 7) lên VCC};
+\end{tikzpicture}\par\vspace{.1cm}
+
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.18}
+\scriptsize
+\begin{tabularx}{\linewidth}{>{\bfseries\color{cyan}}l c X}
+\toprule
+Mã lệnh & Byte & Chức năng kỹ thuật \\
+\midrule
+0x9F (JEDEC) & 1+3 & Đọc nhận diện JEDEC ID: \textbf{0xEF 40 18} \\
+0x03 (Read) & 1+3+N & Đọc tuần tự từ địa chỉ 24-bit ($f \le 50\text{ MHz}$) \\
+0x0B (Fast Read) & 1+3+1+N & Đọc tốc độ cao ($133\text{ MHz}$), cần \textbf{1 dummy byte} \\
+0x06 (WREN) & 1 & Kích hoạt cờ ghi (Write Enable Latch) \\
+0x02 (Page Prog) & 1+3+256 & Ghi dữ liệu trang (tối đa 256 bytes) \\
+\bottomrule
+\end{tabularx}
+
+\column{.48\textwidth}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\color{orange}\bfseries CHU KỲ FAST READ (0x0B)}\par\vspace{.08cm}
+\begin{tikzpicture}[x=.50cm,y=.40cm]
+ \node[anchor=east,text=muted,font=\tiny] at (0,2.1){CS};
+ \draw[green,thick] (0,2.4)--(.5,2.4)--(.5,1.7)--(7.8,1.7)--(7.8,2.4)--(8.3,2.4);
+ \node[anchor=east,text=muted,font=\tiny] at (0,1.0){MOSI};
+ \fill[blue!45] (.5,.6) rectangle ++(1.8,.8); \node[font=\tiny\bfseries] at (1.4,1.0){0x0B};
+ \fill[cyan!35] (2.3,.6) rectangle ++(2.4,.8); \node[font=\tiny\bfseries] at (3.5,1.0){A[23:0]};
+ \fill[orange!40] (4.7,.6) rectangle ++(2.0,.8); \node[font=\tiny\bfseries] at (5.7,1.0){DUMMY};
+ \node[anchor=east,text=muted,font=\tiny] at (0,-.1){MISO};
+ \fill[muted!20] (.5,-.5) rectangle ++(6.2,.8); \node[font=\tiny,text=muted] at (3.6,-.1){High-Z};
+ \fill[green!45] (6.7,-.5) rectangle ++(1.6,.8); \node[font=\tiny\bfseries] at (7.5,-.1){Data Out};
+\end{tikzpicture}\par\vspace{.08cm}
+{\small \textbf{Dummy Byte:} Cung cấp chu kỳ trễ cần thiết để IC truy xuất ô nhớ trước khi đẩy dữ liệu ra bus MISO.}
+\end{beamercolorbox}
+\vspace{.12cm}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\color{cyan}\bfseries QUẢN LÝ THANH GHI TRẠNG THÁI}\par\vspace{.08cm}
+{\small Sau thao tác Erase/Program, MCU gửi lệnh 0x05 đọc thanh ghi trạng thái, polling bit \textbf{BUSY (S0)} về 0 trước khi gửi lệnh tiếp theo.}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{Winbond W25Q128JV Datasheet Rev. J; Bảng opcode và chu kỳ thời gian trích xuất trực tiếp.}
+\end{frame}
+
+% ========================= 25 =========================
+\begin{frame}[shrink=4]{Application 2: Sensors \& IMU}
+\transwipe[direction=180,duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.49\textwidth}
+{\color{cyan}\bfseries CẢM BIẾN BOSCH BMI270 (6-AXIS IMU)}\par\vspace{.08cm}
+{\small Gia tốc và con quay 16-bit, SPI Mode 0/3, $f_{\text{SCLK}} \le \mathbf{10\text{ MHz}}$.}\par\vspace{.08cm}
+{\scriptsize
+\tikz{\node[rounded corners=3pt,fill=cyan!15,draw=cyan,inner sep=2.5pt]{\textbf{Bit 7 = 1: Đọc}};}
+\hspace{.2cm}
+\tikz{\node[rounded corners=3pt,fill=orange!15,draw=orange,inner sep=2.5pt]{\textbf{Bit 7 = 0: Ghi}};}
+}
+
+\vspace{.10cm}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+{\color{orange}\bfseries CƠ CHẾ DUMMY BYTE KHI ĐỌC}\par\vspace{.06cm}
+{\small Gửi \textbf{1 dummy byte} sau địa chỉ để đồng bộ pipeline nội bộ trước khi dữ liệu xuất hiện trên MISO:}\par\vspace{.06cm}
+\begin{tikzpicture}[x=.50cm,y=.38cm]
+ \node[anchor=east,text=muted,font=\tiny] at (0,2.1){CS};
+ \draw[green,thick] (0,2.4)--(.5,2.4)--(.5,1.7)--(7.8,1.7)--(7.8,2.4)--(8.3,2.4);
+ \node[anchor=east,text=muted,font=\tiny] at (0,1.0){MOSI};
+ \fill[blue!45] (.5,.6) rectangle ++(2.4,.8); \node[font=\tiny\bfseries] at (1.7,1.0){Addr | 0x80};
+ \fill[orange!40] (2.9,.6) rectangle ++(2.4,.8); \node[font=\tiny\bfseries] at (4.1,1.0){0x00 (Dummy)};
+ \fill[muted!25] (5.3,.6) rectangle ++(2.5,.8); \node[font=\tiny\bfseries] at (6.55,1.0){0x00};
+ \node[anchor=east,text=muted,font=\tiny] at (0,-.1){MISO};
+ \fill[muted!15] (.5,-.5) rectangle ++(4.8,.8); \node[font=\tiny,text=muted] at (2.9,-.1){Không xác định};
+ \fill[green!45] (5.3,-.5) rectangle ++(2.5,.8); \node[font=\tiny\bfseries] at (6.55,-.1){\textbf{DATA}};
+\end{tikzpicture}\par\vspace{.06cm}
+{\footnotesize \textbf{Lưu ý:} Bỏ qua dummy byte sẽ nhận sai mã Chip ID (\texttt{0x24}) và lệch dữ liệu cảm biến.}
+\end{beamercolorbox}
+
+\column{.49\textwidth}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+{\color{cyan}\bfseries QUY TRÌNH ĐỌC BURST 6 TRỤC (12 BYTES)}\par\vspace{.06cm}
+{\footnotesize
+\textbf{1.} Gửi opcode \texttt{0x8C} (ACC\_X\_LSB) + \textbf{1 Dummy Byte}.\\
+\textbf{2.} Đọc liên tục 12 byte: Gia tốc ($X, Y, Z$) + Con quay ($X, Y, Z$).\\
+\textbf{3.} Kéo CS lên HIGH kết thúc frame truyền.}
+\end{beamercolorbox}
+\vspace{.10cm}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+{\color{orange}\bfseries PHÂN TÍCH TẢI BUS TẠI 10 MHz}\par\vspace{.06cm}
+\begin{itemize}\footnotesize
+ \item \textbf{Cấu trúc gói:} 2B tiêu đề (lệnh + dummy) + 12B dữ liệu 6 trục.
+ \item \textbf{Thời gian 1 lần đọc:} $t = \frac{14 \times 8\text{ bit}}{10\text{ MHz}} = \mathbf{11.2\,\mu\text{s}}$.
+ \item \textbf{Tải bus tại ODR 1.6 kHz} ($T = 625\,\mu\text{s}$): $\text{Tải bus} = \frac{11.2}{625} \approx \mathbf{1.8\%}$.
+ \item \textbf{Đánh giá:} Băng thông bus còn trống \textbf{98.2\%}, cho phép CPU chạy thuật toán Sensor Fusion (AHRS/Kalman filter).
+\end{itemize}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{Bosch Sensortec BMI270 Datasheet Rev. 1.5, Section 6.1.2 SPI interface protocol.}
+\end{frame}
+
+% ========================= 26 =========================
+\begin{frame}[shrink=4]{Application 3: ADC \& DAC}
+\transwipe[direction=90,duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.50\textwidth}
+{\color{cyan}\bfseries TI ADS124S08 · 24-BIT LOW-POWER ADC}\par\vspace{.08cm}
+{\small ADC Delta-Sigma 24-bit chuyên dụng cho cảm biến nhiệt điện trở RTD và can nhiệt công nghiệp.}\par\vspace{.1cm}
+
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\color{orange}\bfseries ĐẶC ĐIỂM TIMING (SPI MODE 1: 0, 1)}\par\vspace{.08cm}
+{\small SCLK idle LOW; xuất dữ liệu cạnh lên, lấy mẫu \textbf{cạnh xuống}.}\par\vspace{.08cm}
+\begin{tikzpicture}[x=.44cm,y=.38cm]
+ \node[anchor=east,text=muted,font=\tiny] at (0,2.3){CS};
+ \draw[green,thick] (0,2.6)--(.6,2.6)--(.6,1.8)--(8.4,1.8)--(8.4,2.6)--(9,2.6);
+ \node[anchor=east,text=muted,font=\tiny] at (0,1.0){SCLK};
+ \draw[cyan,thick] (0,.6)--(1.2,.6);
+ \foreach \x in {1.2,3.2,5.2,7.2}{\draw[cyan,thick] (\x,.6)--(\x,1.4)--(\x+1,1.4)--(\x+1,.6)--(\x+2,.6);}
+ \node[anchor=east,text=muted,font=\tiny] at (0,-.2){MISO};
+ \foreach \x/\v in {1.2/b7,3.2/b6,5.2/b5,7.2/b4}{\fill[orange!25] (\x,-.6) rectangle ++(2,.8);\draw[orange] (\x,-.6) rectangle ++(2,.8);\node[font=\tiny\bfseries] at (\x+1,-.2){\v};}
+ \foreach \x in {2.2,4.2,6.2,8.2}{\draw[green!80,dashed] (\x,-.8)--(\x,1.6);\node[text=green,font=\tiny] at (\x,-1.05){sample};}
+ \draw[Latex-Latex,blue,thin] (.6,3.0)--node[above,font=\tiny,text=blue]{$t_{CSSC}$}(1.2,3.0);
+\end{tikzpicture}\par\vspace{.08cm}
+{\footnotesize Ràng buộc: $t_{\text{CSSC}} \ge 20\,\text{ns}$ (Setup CS), $t_{\text{SCCS}} \ge 25\,\text{ns}$ (Hold CS), $f_{\text{SCLK}} \le 10\,\text{MHz}$.}
+\end{beamercolorbox}
+
+\column{.48\textwidth}
+{\color{cyan}\bfseries TẬP LỆNH CHÍNH (ADS124S08)}\par\vspace{.08cm}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\scriptsize
+\begin{tabularx}{\linewidth}{>{\bfseries\color{cyan}}p{2.3cm} X}
+\toprule
+Lệnh & Chức năng kỹ thuật \\
+\midrule
+RDATA (0x12) & Đọc 24-bit dữ liệu (+ Status/CRC) \\
+RREG (0x20)  & Đọc cấu hình thanh ghi nội bộ \\
+WREG (0x40)  & Thiết lập PGA, MUX, tốc độ lấy mẫu \\
+\bottomrule
+\end{tabularx}
+\vspace{.12cm}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\color{orange}\bfseries ƯU THẾ SO VỚI I²C TRONG ĐO LƯỜNG}\par\vspace{.08cm}
+\begin{itemize}\footnotesize
+ \item \textbf{Zero Jitter:} SCLK điều khiển trực tiếp từ MCU clock tree, thời điểm trích mẫu xác định tuyệt đối (deterministic).
+ \item \textbf{Tốc độ cao:} Đọc 24-bit chỉ mất $2.4\,\mu\text{s}$ @ 10 MHz (I²C 400 kHz mất tới $67.5\,\mu\text{s}$).
+ \item \textbf{Chống nhiễu:} Ngõ ra push-pull không phụ thuộc $R_p$, triệt tiêu xung gai (spike) trên đường truyền.
+\end{itemize}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{Texas Instruments ADS124S08 Datasheet (SBAS660), Section 9.5 Programming \& SPI Timing.}
+\end{frame}
+
+% ========================= 27 =========================
+\begin{frame}[shrink=4]{Application 4: Displays \& Storage}
+\transfade[duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.50\textwidth}
+{\color{cyan}\bfseries MÀN HÌNH TFT LCD (ILI9341, 320$\times$240)}\par\vspace{.08cm}
+{\small Chuẩn màu RGB565: $320 \times 240 \times 2\text{B} = \mathbf{153.6\text{ KB}}$/frame ($1.23\text{ Mb}$).}\par\vspace{.1cm}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.18}
+\scriptsize
+\begin{tabularx}{\linewidth}{>{\bfseries}l c X}
+\toprule
+Xung SCLK & Thời gian & Đánh giá kỹ thuật (FPS) \\
+\midrule
+40 MHz & $30.7\text{ ms}$ & \textbf{32.5 FPS} · Chuyển động mượt mà \\
+10 MHz & $122.9\text{ ms}$ & \textbf{8.1 FPS} · Giật lag, xé hình \\
+\bottomrule
+\end{tabularx}
+\vspace{.10cm}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+{\color{orange}\bfseries GIẢI PHÁP PHẦN CỨNG}\par\vspace{.06cm}
+{\footnotesize Bắt buộc dùng \textbf{SPI DMA} kết hợp chân \textbf{D/CX} để truyền nền, giải phóng 100\% CPU khi quét hình ảnh.}
+\end{beamercolorbox}
+
+\column{.48\textwidth}
+{\color{cyan}\bfseries THẺ NHỚ SD Ở CHẾ ĐỘ SPI}\par\vspace{.08cm}
+\begin{tikzpicture}[node distance=.06cm]
+ \node[smallchip,minimum width=5.6cm,anchor=west,draw=cyan] (a) at (0,0) {\textbf{B1:} Cấp $\ge 74$ xung SCLK $\le 400\text{ kHz}$ khi CS = HIGH};
+ \node[smallchip,minimum width=5.6cm,anchor=west,draw=green,below=of a] (b) {\textbf{B2:} Kéo CS = LOW, gửi CMD0 chuyển sang SPI Mode};
+ \node[smallchip,minimum width=5.6cm,anchor=west,draw=orange,below=of b] (c) {\textbf{B3:} Nâng SCLK lên 20–25 MHz để truyền dữ liệu};
+ \node[smallchip,minimum width=5.6cm,anchor=west,draw=blue,below=of c] (d) {\textbf{B4:} Đọc/ghi theo khối cố định 512B (CMD17 / CMD24)};
+\end{tikzpicture}
+\vspace{.10cm}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+{\color{orange}\bfseries CẤU TRÚC GÓI ĐỌC KHỐI (CMD17)}\par\vspace{.06cm}
+\centering
+\begin{tikzpicture}[x=.52cm,y=.44cm]
+ \fill[blue!35] (0,0) rectangle ++(1.7,.7); \node[font=\tiny\bfseries] at (.85,.35){CMD17};
+ \fill[muted!25] (1.7,0) rectangle ++(1.3,.7); \node[font=\tiny\bfseries] at (2.35,.35){Wait};
+ \fill[orange!40] (3.0,0) rectangle ++(1.4,.7); \node[font=\tiny\bfseries] at (3.7,.35){0xFE};
+ \fill[green!45] (4.4,0) rectangle ++(2.6,.7); \node[font=\tiny\bfseries] at (5.7,.35){512B Data};
+ \fill[cyan!35] (7.0,0) rectangle ++(1.2,.7); \node[font=\tiny\bfseries] at (7.6,.35){CRC};
+\end{tikzpicture}\par\vspace{.05cm}
+{\footnotesize Byte đồng bộ \texttt{0xFE} xác định điểm bắt đầu khối dữ liệu.}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{ILI9341 Driver Datasheet; SD Association Physical Layer Simplified Specification.}
+\end{frame}
+
+% ========================= 28 =========================
+\begin{frame}[shrink=4]{Advanced SPI: Dual, Quad \& Octal SPI}
+\transwipe[direction=0,duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.52\textwidth}
+{\color{cyan}\bfseries MỞ RỘNG ĐƯỜNG TRUYỀN MULTI-I/O}\par\vspace{.12cm}
+\begin{tikzpicture}[x=.75cm,y=.55cm]
+ % Standard
+ \node[anchor=east,text=muted,font=\tiny\bfseries] at (0,3){Standard};
+ \draw[cyan,very thick] (0,3)--(4.8,3); \node[anchor=west,text=cyan,font=\tiny\bfseries] at (4.9,3){1 bit/clk (MOSI, MISO)};
+ % Dual
+ \node[anchor=east,text=muted,font=\tiny\bfseries] at (0,2){Dual SPI};
+ \draw[blue,very thick] (0,2.15)--(4.8,2.15); \draw[blue,very thick] (0,1.85)--(4.8,1.85);
+ \node[anchor=west,text=blue,font=\tiny\bfseries] at (4.9,2){2 bit/clk (IO0, IO1)};
+ % Quad
+ \node[anchor=east,text=muted,font=\tiny\bfseries] at (0,.8){Quad SPI};
+ \foreach \y in {.5,.7,.9,1.1}{\draw[green,very thick] (0,\y)--(4.8,\y);}
+ \node[anchor=west,text=green,font=\tiny\bfseries] at (4.9,.8){4 bit/clk (IO0..IO3)};
+ % Octal
+ \node[anchor=east,text=muted,font=\tiny\bfseries] at (0,-.5){Octal SPI};
+ \draw[orange,line width=3.5pt] (0,-.5)--(4.8,-.5);
+ \node[anchor=west,text=orange,font=\tiny\bfseries] at (4.9,-.5){8 bit SDR / 16 bit DDR};
+\end{tikzpicture}
+\vspace{.2cm}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\scriptsize
+\begin{tabularx}{\linewidth}{>{\bfseries}l c c >{\raggedleft\arraybackslash}X}
+\toprule
+Chuẩn & Số chân I/O & Xung nhịp & Băng thông \\
+\midrule
+Standard SPI & 2 & 50 MHz & 6.25 MB/s \\
+Dual SPI & 2 & 80 MHz & 20 MB/s \\
+\textbf{Quad SPI (QSPI)} & \textbf{4} & \textbf{104 MHz} & \textbf{52 MB/s} \\
+\textbf{Octal SPI (OSPI)} & \textbf{8} & \textbf{133 MHz DDR} & \textbf{266 MB/s} \\
+\bottomrule
+\end{tabularx}
+
+\column{.46\textwidth}
+\begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
+{\color{orange}\bfseries CƠ CHẾ XIP (EXECUTE-IN-PLACE)}\par\vspace{.1cm}
+{\small CPU thực thi trực tiếp mã lệnh từ Flash ngoài qua bộ điều khiển nhớ mà \textbf{không cần nạp trước vào RAM nội}:}\par\vspace{.12cm}
+\begin{tikzpicture}[x=.8cm,y=.62cm]
+ \node[smallchip,minimum width=1.7cm] (cpu) at (0,1.2) {CPU Core};
+ \node[smallchip,minimum width=1.7cm,draw=cyan] (cache) at (2.4,1.2) {L1 Cache\\Controller};
+ \node[smallchip,minimum width=1.7cm,draw=orange] (flash) at (4.8,1.2) {QSPI Flash\\0x90000000};
+ \draw[sig,cyan] (cpu)--(cache);
+ \draw[sig,orange] (cache)--node[above,font=\tiny\bfseries]{4-bit}(flash);
+\end{tikzpicture}\par\vspace{.1cm}
+{\footnotesize Flash được ánh xạ trực tiếp vào không gian nhớ MCU; khi Cache Miss, phần cứng tự động burst 32 bytes nạp vào cache.}
+\end{beamercolorbox}
+\vspace{.2cm}
+\begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
+{\color{cyan}\bfseries CHẾ ĐỘ CONTINUOUS READ}\par\vspace{.1cm}
+{\small Bỏ qua byte opcode sau lần đọc đầu tiên; chỉ phát địa chỉ để tiết kiệm 8 chu kỳ xung clock cho mỗi lần truy xuất.}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{STMicroelectronics AN5050 Octo-SPI Interface; Winbond W25Q Quad-SPI Application Note.}
+\end{frame}
+
+% ========================= 29 =========================
+\begin{frame}[shrink=4]{Common SPI Communication Errors}
+\transfade[duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.50\textwidth}
+{\color{cyan}\bfseries 4 LỖI PHỔ BIẾN \& CƠ CHẾ KỸ THUẬT}\par\vspace{.12cm}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+{\color{red}\bfseries 1 · Sai cấu hình Mode (CPOL / CPHA):}\par
+{\footnotesize Lấy mẫu sai cạnh xung $\rightarrow$ dữ liệu nhận bị dịch 1 bit (\texttt{0xA5} thành \texttt{0x4A} hoặc \texttt{0xD2}).}\\[3pt]
+{\color{orange}\bfseries 2 · Nâng CS quá sớm:}\par
+{\footnotesize Nâng CS khi vừa nạp xong TX FIFO (Shift Register vẫn đang phát bit cuối) $\rightarrow$ Slave hủy frame.}\\[3pt]
+{\color{blue}\bfseries 3 · Tranh chấp bus MISO:}\par
+{\footnotesize Slave không ngắt trở kháng cao (High-Z) khi CS=1 $\rightarrow$ 2 chip cùng lái bus $\rightarrow$ sụt áp ($\approx 1.6\text{ V}$), nóng IC.}\\[3pt]
+{\color{green}\bfseries 4 · Tràn bộ đệm Overrun (OVR):}\par
+{\footnotesize Tốc độ truyền vượt quá khả năng đọc RX FIFO của CPU $\rightarrow$ dữ liệu mới ghi đè làm mất byte cũ.}
+\end{beamercolorbox}
+
+\column{.48\textwidth}
+{\color{muted}\scriptsize CHẨN ĐOÁN DỮ LIỆU BẤT THƯỜNG}\par\vspace{.12cm}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\scriptsize
+\begin{tabularx}{\linewidth}{>{\bfseries\color{orange}}l X}
+\toprule
+Giá trị nhận & Nguyên nhân kỹ thuật \\
+\midrule
+0xFF liên tục & MISO hở mạch, bus floating, ngoại vi mất nguồn \\
+0x00 liên tục & MISO chạm GND, hoặc gửi thiếu \textbf{dummy byte} \\
+Dữ liệu đảo & Cấu hình nhầm thứ tự bit (\textbf{MSB} vs \textbf{LSB}) \\
+Lệch 1 bit & Sai cấu hình \textbf{CPHA} hoặc vi phạm $t_{\text{setup}} / t_{\text{hold}}$ \\
+Mất byte cuối & Nâng CS khi cờ \textbf{BSY} còn bật (chưa truyền xong) \\
+\bottomrule
+\end{tabularx}
+\vspace{.2cm}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+\centering
+\begin{tikzpicture}[x=.62cm,y=.50cm]
+ \draw[red,very thick] (0,1.2)--(2.0,1.2)--(2.5,.2)--(4.8,.2);
+ \draw[blue,very thick] (0,.2)--(2.0,.2)--(2.5,1.2)--(4.8,1.2);
+ \node[text=red,font=\tiny\bfseries,above] at (1.0,1.2){Slave 1: HIGH};
+ \node[text=blue,font=\tiny\bfseries,below] at (1.0,.2){Slave 2: LOW};
+ \fill[orange!35] (2.0,.1) rectangle (2.5,1.3);
+ \node[text=orange,font=\tiny\bfseries,align=left,right] at (2.55,.7){Tranh chấp bus\\$\approx 1.6\text{ V}$ (lơ lửng)};
+\end{tikzpicture}\par\vspace{.08cm}
+{\footnotesize \textbf{Chẩn đoán:} 0x00/0xFF thường do sai CS hoặc MISO hở.}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{Microchip Application Note TB3331: Debugging Serial Interfaces; STM32 Reference Manual.}
+\end{frame}
+
+% ========================= 30 =========================
+\begin{frame}[shrink=4]{Debugging SPI with Instruments}
+\transwipe[direction=90,duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.54\textwidth}
+{\color{cyan}\bfseries SO SÁNH THIẾT BỊ ĐO KIỂM}\par\vspace{.1cm}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\scriptsize
+\begin{tabularx}{\linewidth}{>{\bfseries}p{1.5cm} >{\color{cyan}}X >{\color{orange}}X}
+\toprule
+Tiêu chí & Logic Analyzer & Oscilloscope \\
+\midrule
+Tín hiệu & Mức logic số 0/1 & Dạng sóng tương tự \\
+Bộ nhớ & Sâu (hàng triệu gói) & Nông (vài khung hình) \\
+Bắt lỗi & Sai Mode, lệch bit & Ringing, sụt áp, méo xung \\
+Ứng dụng & Gỡ lỗi firmware / bus & Kiểm tra phần cứng / PCB \\
+\bottomrule
+\end{tabularx}
+\vspace{.12cm}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\color{red}\bfseries KỸ THUẬT ĐO TẦN SỐ CAO ($>20\text{ MHz}$)}\par\vspace{.08cm}
+{\footnotesize Dây mass cá sấu $15\text{ cm}$ có $L \approx 100\text{ nH}$ tạo mạch cộng hưởng $LC$ gây \textbf{ringing giả}. Bắt buộc dùng \textbf{đầu dò lò xo (ground spring)} để ghi nhận đúng dạng sóng thực tế.}
+\end{beamercolorbox}
+
+\column{.44\textwidth}
+{\color{cyan}\bfseries QUY TRÌNH GỠ LỖI 4 BƯỚC}\par\vspace{.1cm}
+\begin{tikzpicture}[node distance=.10cm]
+ \node[smallchip,minimum width=5.8cm,anchor=west,draw=green] (s1) at (0,3.3) {\textbf{B1 · Nguồn \& GND:} VCC đủ áp, GND chung ổn định};
+ \node[smallchip,minimum width=5.8cm,anchor=west,draw=cyan,below=of s1] (s2) {\textbf{B2 · Tín hiệu CS:} Kéo xuống LOW khi mở frame};
+ \node[smallchip,minimum width=5.8cm,anchor=west,draw=orange,below=of s2] (s3) {\textbf{B3 · Xung SCLK:} Đo tần số và cực tính (Mode)};
+ \node[smallchip,minimum width=5.8cm,anchor=west,draw=blue,below=of s3] (s4) {\textbf{B4 · Giải mã Data:} Đối chiếu byte với datasheet};
+ \draw[-Latex,thick,muted] (s1.south) -- (s2.north);
+ \draw[-Latex,thick,muted] (s2.south) -- (s3.north);
+ \draw[-Latex,thick,muted] (s3.south) -- (s4.north);
+\end{tikzpicture}
+\vspace{.12cm}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\color{cyan}\bfseries CẤU HÌNH TRIGGER MÁY ĐO}\par\vspace{.08cm}
+{\footnotesize Cài đặt Trigger theo \textbf{cạnh xuống của CS} thay vì SCLK để khóa đúng thời điểm bắt đầu frame, tránh kích hoạt liên tục trên mọi xung clock.}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{Tektronix Application Note: Troubleshooting Embedded Serial Buses; Keysight Probing Guidelines.}
+\end{frame}
+
+% ========================= 31 =========================
+\begin{frame}[shrink=4]{Real-World SPI Case Studies}
+\transfade[duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.49\textwidth}
+{\color{cyan}\bfseries TH1 - LỖI KẾT THÚC DMA TRÊN STM32}\par\vspace{.15cm}
+\begin{tikzpicture}[x=.55cm,y=.52cm]
+ \node[anchor=east,text=muted,font=\tiny] at (0,2.5){DMA IRQ};
+ \draw[green,very thick] (0,2.2)--(3.8,2.2); \draw[muted!40,very thick] (3.8,2.2)--(8,2.2);
+ \node[text=green,font=\tiny\bfseries] at (3.8,2.7){Transfer Complete};
+ \draw[green!80,dashed] (3.8,-.2)--(3.8,3);
+  
+ \node[anchor=east,text=muted,font=\tiny] at (0,1.2){Shift Reg};
+ \draw[orange,very thick] (0,.9)--(6.2,.9); \draw[muted!40,very thick] (6.2,.9)--(8,.9);
+ \node[text=orange,font=\tiny\bfseries] at (6.2,1.4){Clock xong bit 8};
+ \draw[orange!80,dashed] (6.2,-.2)--(6.2,1.8);
+  
+ \node[anchor=east,text=muted,font=\tiny] at (0,.0){CS Line};
+ \draw[red,very thick] (0,-.3)--(3.8,-.3)--(3.8,.4)--(8,.4);
+ \node[text=red,font=\tiny\bfseries] at (3.8,-.7){CS$\uparrow$ quá sớm!};
+\end{tikzpicture}
+\vspace{.15cm}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\small\textbf{Hiện tượng:} Ghi Flash bị thiếu hoặc sai lệch byte cuối.}\par\vspace{.08cm}
+{\footnotesize\textbf{Cơ chế:} Ngắt `DMA Complete` kích hoạt khi RAM nạp xong byte vào TX Buffer, trong khi Shift Register vẫn đang phát bit cuối trên đường truyền. Nâng CS trong ngắt làm mất dữ liệu.}\par\vspace{.08cm}
+{\small\color{green}\textbf{Khắc phục:} Chờ cờ \texttt{SPI\_FLAG\_BSY == 0} trước khi kéo CS lên HIGH.}
+\end{beamercolorbox}
+
+\column{.49\textwidth}
+{\color{cyan}\bfseries TH2 - TRANH CHẤP BUS TRONG RTOS}\par\vspace{.15cm}
+\begin{tikzpicture}[x=.75cm,y=.65cm]
+ \node[smallchip,minimum width=2.4cm,draw=orange] (t1) at (0,2.2) {Task 1: Display\\\tiny Priority 2 · Khối 153KB};
+ \node[smallchip,minimum width=2.4cm,draw=green] (t2) at (0,.6) {Task 2: IMU\\\tiny Priority 5 · Đọc 12B};
+ \node[device,minimum width=2.2cm,minimum height=2.2cm,draw=cyan] (spi) at (4.2,1.4) {\bfseries SPI Bus\\\tiny Ngoại vi chung};
+ \draw[-Latex,thick,orange] (t1.east) -- node[above,font=\tiny]{gọi SPI}($(spi.west)+(0,.4)$);
+ \draw[-Latex,thick,green] (t2.east) -- node[below,font=\tiny]{preempt!}($(spi.west)+(0,-.4)$);
+\end{tikzpicture}
+\vspace{.15cm}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\small\textbf{Hiện tượng:} Màn hình LCD vỡ điểm ảnh, IMU đọc sai giá trị.}\par\vspace{.08cm}
+{\footnotesize\textbf{Cơ chế:} Task IMU ưu tiên cao chiếm bus khi Task Display đang truyền frame lớn, làm thay đổi xung nhịp và ngắt ngang frame.}\par\vspace{.08cm}
+{\small\color{cyan}\textbf{Khắc phục chuẩn công nghiệp:}}
+{\footnotesize
+\begin{itemize}\setlength\itemsep{0em}
+ \item Dùng \textbf{Mutex với Priority Inheritance} bảo vệ bus.
+ \item Cấu hình lại prescaler và SPI mode trước mỗi transaction.
+\end{itemize}
+}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{FreeRTOS Developer Guide; STMicroelectronics AN5543 Guidelines for Enhanced SPI Communication.}
+\end{frame}
+
+% ========================= 32 =========================
+\begin{frame}[shrink=2]{SPI Demo: Hardware Wiring on Breadboard}
+\transwipe[direction=0,duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.63\textwidth}
+\centering\includegraphics[width=\linewidth,height=5.6cm,keepaspectratio]{esp32_breadboard_cropped.png}
+
+\column{.35\textwidth}
+\vspace{.25cm}
+\begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
+{\color{cyan}\bfseries THÀNH PHẦN MẠCH}\par\vspace{.12cm}
+{\normalsize
+\begin{itemize}\setlength\itemsep{.45em}
+  \item \textbf{Master (Controller):}\\ ESP32 DevKit V1 (VSPI).
+  \item \textbf{Slave (Peripheral):}\\ Module RFID RC522.
+  \item \textbf{Cảm biến mở rộng:}\\ DHT11 (Chân GPIO 4).
+  \item \textbf{Nguồn cấp:}\\ \alert{\textbf{CMOS 3.3V}} (\textit{tránh cấp 5V}).
+\end{itemize}
+}
+\end{beamercolorbox}
+\vspace{.35cm}
+\begin{center}
+\pill{green}{\small SCLK: 1 MHz · SPI Mode 0}
+\end{center}
+\end{columns}
+\vfill
+\source{Mô hình cắm dây thử nghiệm thực tế; ESP32-WROOM-32 Pinout.}
+\end{frame}
+
+% ========================= 33 =========================
+\begin{frame}[shrink=2]{SPI Demo: Circuit Schematic \& Pinout}
+\transfade[duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.55\textwidth}
+\centering\includegraphics[width=\linewidth,height=5.6cm,keepaspectratio]{esp32_rfid_schematic.png}
+
+\column{.43\textwidth}
+{\color{cyan}\bfseries ÁNH XẠ CHÂN TÍN HIỆU SPI}\par\vspace{.15cm}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.25}
+\small
+\begin{tabularx}{\linewidth}{>{\bfseries}l >{\color{cyan}\bfseries}l >{\raggedright\arraybackslash}X}
+\toprule
+Tín hiệu & ESP32 & Ý nghĩa trong SPI \\
+\midrule
+CS / SS  & GPIO 5  & Chip Select (Active-Low) \\
+SCLK     & GPIO 18 & Clock $1\text{ MHz}$ (Mode 0) \\
+MOSI     & GPIO 23 & Master Out $\to$ Slave In \\
+MISO     & GPIO 19 & Slave Out $\to$ Master In \\
+RST      & GPIO 22 & Reset module RC522 \\
+DATA     & GPIO 4  & Cảm biến DHT11 (1-Wire) \\
+\bottomrule
+\end{tabularx}
+\vspace{.25cm}
+\begin{beamercolorbox}[rounded=true,sep=6pt]{block body}
+{\small \textbf{Nguyên tắc:} Chuẩn CMOS 3.3V, nối thẳng bus tín hiệu, CS tích cực mức thấp (LOW).}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{Sơ đồ mạch nguyên lý đối chiếu theo chuẩn SPI 4-dây quốc tế.}
+\end{frame}
+
+% ========================= 34 =========================
+\begin{frame}[shrink=2]{SPI Demo: Live Execution \& Protocol Analysis}
+\transfade[duration=.35]
+\vspace{-.25cm}
+\begin{columns}[T,onlytextwidth]
+\column{.47\textwidth}
+\centering\includegraphics[width=\linewidth,height=3.1cm,keepaspectratio]{esp32_rfid_serial_cropped.png}\par\vspace{.1cm}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+{\color{green}\bfseries KẾT QUẢ THỰC NGHIỆM}\par\vspace{.04cm}
+{\small
+\begin{itemize}\setlength\itemsep{.2em}
+  \item \textbf{Đọc VersionReg:} Trả về mã \texttt{0x82}.
+  \item \textbf{Quẹt thẻ RFID:} Đọc đúng UID \texttt{C1 81 45 68}.
+  \item \textbf{DHT11:} Đo nhiệt độ, độ ẩm ổn định.
+\end{itemize}
+}
+\end{beamercolorbox}
+
+\column{.51\textwidth}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+{\color{cyan}\bfseries 4 BƯỚC TRUYỀN NHẬN SPI}\par\vspace{.04cm}
+{\small
+\begin{enumerate}\setlength\itemsep{.15em}
+  \item \textbf{CS $\downarrow$ LOW:} Chọn chip RC522.
+  \item \textbf{MOSI:} Gửi lệnh đọc \texttt{0xEE} (thanh ghi \texttt{0x37}).
+  \item \textbf{SCLK/MISO:} Gửi dummy \texttt{0x00} $\to$ nhận \texttt{0x82}.
+  \item \textbf{CS $\uparrow$ HIGH:} Kết thúc frame.
+\end{enumerate}
+}
+\end{beamercolorbox}
+\vspace{.1cm}
+\begin{beamercolorbox}[rounded=true,sep=5pt]{block body}
+{\color{orange}\bfseries GIẢI THÍCH MÃ 0x82}\par\vspace{.04cm}
+{\small
+\begin{itemize}\setlength\itemsep{.15em}
+  \item \textbf{Không lỗi SPI:} Lệch bit sẽ ra \texttt{0x24} hoặc \texttt{0x49}.
+  \item \textbf{Do loại chip:} FM17522 là \texttt{0x82}, NXP là \texttt{0x92}.
+  \item \textbf{Kết luận:} SPI Mode 0 chuẩn, đọc thẻ tốt.
+\end{itemize}
+}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{Đối chiếu NXP MFRC522 Datasheet \& Fudan FM17522 Specification.}
+\end{frame}
+
+% ========================= 35 =========================
+\begin{frame}[shrink=4]{Conclusion \& References}
+\transfade[duration=.35]
+\vspace{-.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{.52\textwidth}
+{\color{cyan}\bfseries TỔNG KẾT SLIDE}\par\vspace{.15cm}
+
+\begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
+{\color{cyan}\bfseries 4 QUY TẮC THIẾT KẾ HỆ THỐNG SPI}\par\vspace{.12cm}
+\begin{enumerate}\small\setlength\itemsep{.2em}
+  \item \textbf{Đối chiếu Datasheet:} Kiểm tra kỹ biểu đồ thời gian CPOL/CPHA, không suy đoán mode qua tên gọi.
+  \item \textbf{Đợi cờ BSY về 0:} Không bao giờ nâng CS chỉ dựa vào cờ bộ đệm trống (TXE) hoặc ngắt DMA.
+  \item \textbf{Bảo vệ Bus trong RTOS:} Dùng Mutex kèm Priority Inheritance khi nhiều tác vụ chia sẻ ngoại vi.
+  \item \textbf{Toàn vẹn tín hiệu (SI):} Thêm điện trở nối tiếp 22–47 $\Omega$, đi dây ngắn, giữ mặt mass liên tục.
+\end{enumerate}
+\end{beamercolorbox}
+
+\column{.46\textwidth}
+{\color{cyan}\bfseries TÀI LIỆU THAM KHẢO CHÍNH}\par\vspace{.15cm}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\scriptsize
+\begin{tabularx}{\linewidth}{>{\bfseries}l X}
+\toprule
+Tổ chức / Hãng & Tài liệu trích dẫn \\
+\midrule
+Analog Devices & \textit{AN-1531: SPI Interface Guide} \\
+STMicroelectronics & \textit{AN5543: Enhanced SPI Communication} \\
+Winbond & \textit{W25Q128JV Serial Flash Datasheet} \\
+Bosch Sensortec & \textit{BMI270 6-Axis IMU Specification} \\
+Texas Instruments & \textit{ADS124S08 24-Bit Delta-Sigma ADC} \\
+\bottomrule
+\end{tabularx}
+\vspace{.25cm}
+\begin{beamercolorbox}[rounded=true,sep=7pt]{block body}
+\centering
+{\color{cyan}\bfseries CẢM ƠN THẦY VÀ CÁC BẠN ĐÃ THEO DÕI!}\par\vspace{.15cm}
+\pill{orange}{PHIÊN HỎI \& ĐÁP / Q\&A}
+\end{beamercolorbox}
+\end{columns}
+\vfill
+\source{Nhóm thực hiện: Mạnh (1–11) · Đạt (12–22) · Phúc (23–35) — Môn học: Vi xử lí – Vi điều khiển.}
+\end{frame}
+
 
 \end{document}

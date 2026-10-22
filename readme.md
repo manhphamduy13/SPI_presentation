@@ -11,7 +11,7 @@
 |---|---|---:|---|---|
 | **Mạnh** | 1–11 | 11 | SPI Fundamentals & Working Principles | 10–12 phút |
 | **Đạt** | 12–22 | 11 | Timing, Hardware & Software Implementation | 10–12 phút |
-| **Phúc** | 23–33 | 11 | Applications, Debugging & Case Studies | 10–12 phút |
+| **Phúc** | 23–35 | 13 | Applications, Debugging & Case Studies | 10–12 phút |
 
 **Mục tiêu chung:** Người nghe hiểu SPI từ nguyên lý mạch số và giao thức truyền thông đến triển khai trên MCU, ứng dụng thực tế và phương pháp xử lý lỗi.
 
@@ -79,7 +79,7 @@
 
 ---
 
-## 4. Phúc — Applications, Debugging & Case Studies (Slide 23–33)
+## 4. Phúc — Applications, Debugging & Case Studies (Slide 23–35)
 
 **Mục tiêu:** Chỉ ra SPI dùng ở đâu trong sản phẩm thật, giới hạn và lỗi khi triển khai; chứng minh hiểu biết qua một ví dụ/demo thực tế.
 
@@ -94,8 +94,10 @@
 | 29 | Common SPI Communication Errors | Sai mode, CS, bit order; MISO floating, bus contention, overrun/underrun. |
 | 30 | Debugging SPI with Instruments | Logic analyzer vs oscilloscope; checklist debug từ nguồn/chân đến timing và waveform. |
 | 31 | Real-World SPI Case Studies | DMA complete nhưng bus chưa kết thúc; nhiều task chia sẻ SPI bus và đồng bộ truy cập. |
-| 32 | SPI Demonstration / Practical Example | Demo đọc JEDEC ID (`0x9F`) từ SPI NOR Flash hoặc mô phỏng minh bạch; sơ đồ, code, waveform, kết quả. |
-| 33 | Conclusion & References | Tóm tắt, ứng dụng nổi bật, những lưu ý kỹ thuật và danh mục tài liệu; chuyển sang Q&A. |
+| 32 | SPI Demo 1: Hardware Wiring on Breadboard | Sơ đồ cắm dây Breadboard trực quan khổ lớn, thành phần phần cứng ESP32 + RC522 + DHT11, chuẩn 3.3V CMOS. |
+| 33 | SPI Demo 2: Circuit Schematic & Pinout | Sơ đồ nguyên lý mạch khổ lớn, bảng ánh xạ chân tín hiệu SPI (CS, SCLK, MOSI, MISO, RST). |
+| 34 | SPI Demo 3: Live Execution & Protocol Analysis | Kết quả Serial Monitor (2 màn thực nghiệm); phân tích 4 bước transaction thô & giải mã Firmware ID 0x82 (Fudan clone) vs 0x92. |
+| 35 | Conclusion & References | Tóm tắt 4 quy tắc thiết kế hệ thống SPI, danh mục tài liệu tham khảo và phiên hỏi đáp Q&A. |
 
 **Ví dụ ứng dụng phải có:**
 1. **SPI NOR Flash — Winbond W25Q128JV:** lưu firmware/dữ liệu, Standard/Dual/Quad SPI, ví dụ `0x9F` đọc JEDEC ID.
